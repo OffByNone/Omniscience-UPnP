@@ -1,0 +1,23 @@
+{
+	"name": "omniscienceupnp",
+	"version": "0.5.0",
+	"description": "Module for Omniscience containing upnp stuff.",
+	"main": "index.js",
+	"author": "OffByNone",
+	"license": "MIT",
+	"homepage": "https://github.com/offbynone/omniscienceupnp",
+	"bugs": {
+		"url": "https://github.com/offbynone/omniscienceupnp/issues",
+		"email": "offbynone@outlook.com"
+	},
+	"keywords": [
+		"omniscience"
+	],
+	"engines": {
+		"Firefox": ">=38.0a1",
+		"Fennec": ">=38.0a1"
+	},
+	"scripts": {
+		"test": "node ./test/test.js"
+	}
+}
