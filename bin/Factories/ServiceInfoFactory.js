@@ -81,7 +81,7 @@ var ServiceInfoFactory = (function () {
         value: function getDetailedServiceInformation(serviceInfo) {
             var _this2 = this;
 
-            if (!this._urlProvider.isValidURI(serviceInfo.scpdUrl)) return Promise.reject('scpdURL was null');
+            if (!this._urlProvider.isValidUri(serviceInfo.scpdUrl)) return Promise.reject('scpdURL was null');
             return this._fetch(serviceInfo.scpdUrl).then(function (response) {
                 var responseText = response._bodyText;
                 var responseHash = _this2._md5(responseText);

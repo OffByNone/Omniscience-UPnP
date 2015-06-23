@@ -5,7 +5,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var Constants = require('./Constants');
+var Constants = require('../Constants');
 
 var SubscriptionService = (function () {
 	function SubscriptionService(fetch) {
@@ -16,14 +16,14 @@ var SubscriptionService = (function () {
 
 	_createClass(SubscriptionService, [{
 		key: 'subscribe',
-		value: function subscribe(subscriptionUrl, directResponsesTo, eventSubscriptionId, timeout) {
+		value: function subscribe(directResponsesTo, subscriptionUrl, subscriptionId, timeout) {
 			var _this = this;
 
 			var headers;
-			if (eventSubscriptionId) {
+			if (subscriptionId) {
 				headers = {
 					TIMEOUT: 'Second-' + timeout,
-					SID: eventSubscriptionId
+					SID: subscriptionId
 				};
 			} else {
 				headers = {
@@ -38,24 +38,24 @@ var SubscriptionService = (function () {
 				headers: headers
 			}).then(function (response) {
 				//todo: this function probably doesn't belong in here
-				eventSubscriptionId = response.headers.get('sid');
+				subscriptionId = response.headers.get('sid');
 				if (!response.ok) {
 					if (response.status == Constants.PreconditionFailed) {
 						//we didn't respond within the timeout so we need to send again
 						//todo: add a max number of retries
-						eventSubscriptionId = null;
+						subscriptionId = null;
 						console.log('subscription timed out, trying again.');
-						return _this.subscribe(subscriptionUrl, eventSubscriptionId, timeout);
-					} else throw new Error('Subscription at address: ' + subscriptionUrl + ' failed. Status code ' + response.status);
+						return _this.subscribe(directResponsesTo, subscriptionUrl, subscriptionId, timeout);
+					} else return Promise.reject('Subscription at address: ' + subscriptionUrl + ' failed. Status code ' + response.status);
 				}
-				return eventSubscriptionId;
+				return subscriptionId;
 			});
 		}
 	}, {
 		key: 'unsubscribe',
-		value: function unsubscribe(subscriptionUrl, eventSubscriptionId) {
-			if (!subscriptionUrl || !eventSubscriptionId) return Promise.reject('Either the subscriptionURL was null or the subscription id was, either way nothing to unsubscribe.'); //todo: better validation, also validate some fields on subscribe too.
-			return this._fetch(subscriptionUrl, { method: 'UNSUBSCRIBE', headers: { SID: eventSubscriptionId } });
+		value: function unsubscribe(subscriptionUrl, subscriptionId) {
+			if (!subscriptionUrl || !subscriptionId) return Promise.reject('Either the subscriptionURL was null or the subscription id was, either way nothing to unsubscribe.'); //todo: better validation, also validate some fields on subscribe too.
+			return this._fetch(subscriptionUrl, { method: 'UNSUBSCRIBE', headers: { SID: subscriptionId } });
 		}
 	}]);
 

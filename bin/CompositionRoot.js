@@ -5,7 +5,6 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var DeviceFactory = require('./Factories/DeviceFactory');
-var UDPSocketFactory = require('./Factories/UDPSocketFactory');
 var ServiceInfoFactory = require('./Factories/ServiceInfoFactory');
 var ExecutableServiceFactory = require('./Factories/ExecutableServiceFactory');
 var ServiceExecutor = require('./Services/ServiceExecutor');
@@ -14,9 +13,7 @@ var SubscriptionService = require('./Services/SubscriptionService');
 var XmlParser = require('./XmlParser');
 var StringUtils = require('./StringUtilities');
 
-var Utils = require('omniscienceutilities');
-var fetch = require('fetch');
-var MD5 = require('md5');
+var Utils = require('omniscience-utilities');
 
 var CompositionRoot = (function () {
 	function CompositionRoot(sdk) {
@@ -28,17 +25,17 @@ var CompositionRoot = (function () {
 	_createClass(CompositionRoot, [{
 		key: 'createDeviceFactory',
 		value: function createDeviceFactory() {
-			return new DeviceFactory(fetch, new XmlParser(this._sdk.createDOMParser()), Utils.createUrlProvider(), MD5);
+			return new DeviceFactory(Utils.fetch(), new XmlParser(this._sdk.createDomParser()), Utils.createUrlProvider(), Utils.MD5());
 		}
 	}, {
 		key: 'createSubscriptionService',
 		value: function createSubscriptionService() {
-			return new SubscriptionService(fetch);
+			return new SubscriptionService(Utils.fetch());
 		}
 	}, {
 		key: 'createServiceExecutor',
 		value: function createServiceExecutor() {
-			return new ServiceExecutor(new ServiceInfoFactory(fetch, new XmlParser(this._sdk.createDOMParser()), Utils.createUrlProvider(), MD5), new ExecutableServiceFactory(new XmlParser(this._sdk.createDOMParser()), new SOAPService(fetch, this._sdk.createDOMParser(), StringUtils)));
+			return new ServiceExecutor(new ServiceInfoFactory(Utils.fetch(), new XmlParser(this._sdk.createDomParser()), Utils.createUrlProvider(), Utils.MD5()), new ExecutableServiceFactory(new XmlParser(this._sdk.createDomParser()), new SOAPService(Utils.fetch(), this._sdk.createDomParser(), StringUtils)));
 		}
 	}]);
 

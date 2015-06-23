@@ -15,7 +15,7 @@ var ServiceInfo = function ServiceInfo() {
     this.properties = [];
     this.methods = [];
     this.hash = null;
-    this.eventSubscriptionId = null; //id used to unsubscribe and renew subscriptions.  Is returned from the subscribe call.
+    this.subscriptionId = null; //id used to unsubscribe and renew subscriptions.  Is returned from the subscribe call.
 };
 
 module.exports = ServiceInfo;
