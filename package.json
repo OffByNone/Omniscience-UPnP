@@ -1,34 +1,35 @@
 {
 	"name": "omniscience-upnp",
 	"version": "0.5.1",
-	"description": "Module for Omniscience containing upnp stuff.",
+	"description": "Omniscience Module for finding and creating UPnP devices.",
 	"main": "./bin/index.js",
 	"author": "OffByNone",
 	"license": "MIT",
 	"homepage": "https://github.com/offbynone/omniscience-upnp",
 	"bugs": {
-		"url": "https://github.com/offbynone/omniscience-upnp/issues",
-		"email": "offbynone@outlook.com"
+		"url": "https://github.com/offbynone/omniscience-upnp/issues"
 	},
 	"keywords": [
-		"omniscience"
+		"omniscience",
+		"UPnP"
 	],
 	"engines": {
 		"Firefox": ">=38.0a1",
 		"Fennec": ">=38.0a1"
 	},
-	"devDependencies": {
-		"babel": "^5.5.8",
-		"eslint": "^0.23.0",
-		"jasmine": "^2.3.1",
-		"jpm": "^1.0.0"
-	},
 	"repository": {
 		"type": "git",
 		"url": "git://github.com/offbynone/omniscience-upnp.git"
 	},
+	"devDependencies": {
+		"babel": "^5.6.14",
+		"codecov.io": "^0.1.4",
+		"eslint": "^0.24.0",
+		"istanbul": "^0.3.16",
+		"jasmine": "^2.3.1"
+	},
 	"dependencies": {
-		"omniscience-sdk-resolver": "^0.5.0",
-		"omniscience-utilities": "^0.6.2"
+		"omniscience-sdk-resolver": "^0.6.1",
+		"omniscience-utilities": "^0.8.1"
 	}
 }
