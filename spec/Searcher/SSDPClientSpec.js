@@ -1,7 +1,7 @@
 ///<reference path="./support/jasmine.d.ts" />
 require("babel/register");
-const SSDPClient = require("../lib/SSDPClient");
-const Constants = require('../lib/Constants');
+const SSDPClient = require('../../lib/Searcher/SSDPClient');
+const Constants = require('../../lib/Constants');
 
 describe("SSDPClient", function () {
 	var _sut;

@@ -1,7 +1,7 @@
 ///<reference path="./support/jasmine.d.ts" />
 require("babel/register");
-const DeviceLocator = require("../lib/DeviceLocator");
-const Constants = require('../lib/Constants');
+const DeviceLocator = require('../../lib/Searcher/DeviceLocator');
+const Constants = require('../../lib/Constants');
 
 describe("DeviceLocator", function () {
 	var _sut;

@@ -1,7 +1,7 @@
 ///<reference path="./support/jasmine.d.ts" />
 require("babel/register");
-const PassiveSearcher = require("../lib/PassiveSearcher");
-const Constants = require('../lib/Constants');
+const PassiveSearcher = require('../../lib/Searcher/PassiveSearcher');
+const Constants = require('../../lib/Constants');
 
 describe("PassiveSearcher", function () {
 	var _sut;
