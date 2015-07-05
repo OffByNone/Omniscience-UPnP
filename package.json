@@ -4,7 +4,7 @@
 	"description": "Omniscience Module for finding and creating UPnP devices.",
 	"main": "./bin/index.js",
 	"author": "OffByNone",
-	"license": "MIT",
+	"license": "GNU GPL 3.0",
 	"homepage": "https://github.com/offbynone/omniscience-upnp",
 	"bugs": {
 		"url": "https://github.com/offbynone/omniscience-upnp/issues"

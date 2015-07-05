@@ -12,7 +12,7 @@ describe("XmlParser", function () {
 	});
 
 	describe("parseFromString", function () {
-		it("should return string as xml doc", function () {
+		it("should return string as xml doc when the argument passed in is a string", function () {
 			//arrange
 			var stringToBeConverted = "some valid xml";
 			var xmlResult = "some xml";
@@ -26,6 +26,13 @@ describe("XmlParser", function () {
 			expect(_mockDomParser.parseFromString).toHaveBeenCalledWith(stringToBeConverted, 'text/xml');
 			expect(actual).toBe(xmlResult);
 		});
+		it("should return null when the argument passed in is not a string", function () {
+			//arrange/act
+			var actual = _sut.parseFromString(null);
+			
+			//assert
+			expect(actual).toBeNull();
+		});		
 	});
 	describe("getElements", function () {
 		it("should return all matching elements as array of elements when xml is not null and contains a querySelectorAll function", function () {
