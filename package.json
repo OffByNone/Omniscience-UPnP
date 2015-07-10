@@ -30,6 +30,6 @@
 	},
 	"dependencies": {
 		"omniscience-sdk-resolver": "offbynone/omniscience-sdk-resolver",
-		"omniscience-utilities": "ffbynone/omniscience-utilities"
+		"omniscience-utilities": "offbynone/omniscience-utilities"
 	}
 }
