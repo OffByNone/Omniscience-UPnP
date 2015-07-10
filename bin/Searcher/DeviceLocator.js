@@ -47,6 +47,12 @@ var DeviceLocator = (function (_Eventable) {
 			this._passiveSearcher.search();
 		}
 	}, {
+		key: 'stop',
+		value: function stop() {
+			this._activeSearcher.stop();
+			this._passiveSearcher.stop();
+		}
+	}, {
 		key: '_initializeSearchers',
 		value: function _initializeSearchers() {
 			var _this2 = this;

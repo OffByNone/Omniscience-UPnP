@@ -40,8 +40,8 @@ var SSDPClient = (function (_Eventable) {
 			this._socket.send(Constants.MulticastIP, Constants.MulticastPort, message, message.length);
 		}
 	}, {
-		key: 'stopSearch',
-		value: function stopSearch() {
+		key: 'stop',
+		value: function stop() {
 			this._socket.close();
 		}
 	}, {

@@ -1,4 +1,3 @@
-///<reference path="../support/jasmine.d.ts" />
 require("babel/register");
 const ExecutableServiceMethodFactory = require('../../lib/Factories/ExecutableServiceMethodFactory');
 const Constants = require('../../lib/Constants');
@@ -66,7 +65,7 @@ describe("ExecutableServiceMethodFactory", function () {
 				if (name === returnValue2.name) return returnVal2Result;
 				else fail("unexpected name '" + name + "' passed in");
 			});
-			
+
 			//act
 			var actual = _sut.create(method, urn);
 

@@ -45,6 +45,11 @@ var DeviceService = (function (_Eventable) {
 			});
 		}
 	}, {
+		key: 'stop',
+		value: function stop() {
+			this._deviceLocator.stop();
+		}
+	}, {
 		key: 'search',
 		value: function search() {
 			var _this2 = this;

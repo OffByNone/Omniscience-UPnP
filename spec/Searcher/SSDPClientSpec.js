@@ -1,4 +1,3 @@
-///<reference path="./support/jasmine.d.ts" />
 require("babel/register");
 const SSDPClient = require('../../lib/Searcher/SSDPClient');
 const Constants = require('../../lib/Constants');
@@ -17,10 +16,10 @@ describe("SSDPClient", function () {
 		it("should start listening on the socket", function () {
 			//arrange
 			_mockUdpSocket.asyncListen = jasmine.createSpy("asyncListen");
-			
+
 			//act
 			_sut.startListening();
-			
+
 			//assert
 			expect(_mockUdpSocket.asyncListen).toHaveBeenCalledWith(_sut);
 		});
@@ -28,14 +27,14 @@ describe("SSDPClient", function () {
 	describe("search", function () {
 
 	});
-	describe("stopSearch", function () {
+	describe("stop", function () {
 		it("should close the socket", function () {
 			//arrange
 			_mockUdpSocket.close = jasmine.createSpy("close");
-			
+
 			//act
-			_sut.stopSearch();			
-			
+			_sut.stop();
+
 			//assert
 			expect(_mockUdpSocket.close).toHaveBeenCalledWith();
 		});
@@ -44,10 +43,10 @@ describe("SSDPClient", function () {
 		it("should set socket multicast interface to the ip passed in", function () {
 			//arrange
 			var ipAddress = "my ip address";
-			
+
 			//act
 			_sut.setMulticastInterface(ipAddress);
-			
+
 			//assert
 			expect(_mockUdpSocket.multicastInterface).toBe(ipAddress);
 		});
@@ -59,10 +58,10 @@ describe("SSDPClient", function () {
 
 			var ipAddress = "my ip address";
 			_sut.setMulticastInterface(ipAddress);
-			
+
 			//act
-			_sut.joinMulticast();			
-			
+			_sut.joinMulticast();
+
 			//assert
 			expect(_mockUdpSocket.joinMulticast).toHaveBeenCalledWith(Constants.MulticastIP, ipAddress);
 		});
@@ -74,10 +73,10 @@ describe("SSDPClient", function () {
 
 			var ipAddress = "my ip address";
 			_sut.setMulticastInterface(ipAddress);
-			
+
 			//act
-			_sut.leaveMulticast();			
-			
+			_sut.leaveMulticast();
+
 			//assert
 			expect(_mockUdpSocket.leaveMulticast).toHaveBeenCalledWith(Constants.MulticastIP, ipAddress);
 		});
@@ -88,10 +87,10 @@ describe("SSDPClient", function () {
 			var status = "closed";
 			var closeFunc = jasmine.createSpy("closeFunc");
 			_sut.on("close", closeFunc);
-			
+
 			//act
 			_sut.onStopListening(null, status);
-			
+
 			//assert
 			expect(closeFunc).toHaveBeenCalledWith(status);
 		});

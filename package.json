@@ -1,6 +1,6 @@
 {
 	"name": "omniscience-upnp",
-	"version": "0.5.1",
+	"version": "0.5.2",
 	"description": "Omniscience Module for finding and creating UPnP devices.",
 	"main": "./bin/index.js",
 	"author": "OffByNone",
@@ -29,7 +29,7 @@
 		"jasmine": "^2.3.1"
 	},
 	"dependencies": {
-		"omniscience-sdk-resolver": "^0.6.1",
-		"omniscience-utilities": "^0.8.1"
+		"omniscience-sdk-resolver": "offbynone/omniscience-sdk-resolver",
+		"omniscience-utilities": "ffbynone/omniscience-utilities"
 	}
 }

@@ -1,4 +1,3 @@
-///<reference path="../support/jasmine.d.ts" />
 require("babel/register");
 const ServiceMethodFactory = require('../../lib/Factories/ServiceMethodFactory');
 const Constants = require('../../lib/Constants');
@@ -48,10 +47,10 @@ describe("ServiceMethodFactory", function () {
 				if (elName === "argument") return argumentsXml;
 				else fail("unexpected element name '" + elName + "' passed in");
 			});
-			
+
 			//act
 			var actual = _sut.create(methodXml, backingProperties);
-			
+
 			//assert
 			expect(actual.name).toBe(methodName);
 			expect(actual.returnValues.length).toBe(1);
@@ -97,10 +96,10 @@ describe("ServiceMethodFactory", function () {
 				if (elName === "argument") return argumentsXml;
 				else fail("unexpected element name '" + elName + "' passed in");
 			});
-			
+
 			//act
 			var actual = _sut.create(methodXml, backingProperties);
-			
+
 			//assert
 			expect(actual.name).toBe(methodName);
 			expect(actual.parameters.length).toBe(1);
@@ -109,6 +108,6 @@ describe("ServiceMethodFactory", function () {
 			expect(actual.parameters[0].datatype).toBe(backingProperties[0].datatype);
 			expect(actual.parameters[0].allowedValues).toBe(backingProperties[0].allowedValues);
 			expect(actual.parameters[0].allowedValueRange).toBe(backingProperties[0].allowedValueRange);
-		});		
+		});
 	});
 });

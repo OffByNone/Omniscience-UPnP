@@ -36,13 +36,13 @@ var SubscriptionService = (function () {
 					NT: "upnp:event"
 				};
 			}
-
 			return this._fetch(subscriptionUrl, {
 				method: "SUBSCRIBE",
 				headers: headers
 			}).then(function (response) {
 				subscriptionId = response.headers.get("sid");
 				if (!response.ok) {
+					//handle 405 method not allowed
 					if (response.status == Constants.PreconditionFailed) {
 						//we didn't respond within the timeout so we need to send again
 						//todo: add a max number of retries
@@ -52,6 +52,9 @@ var SubscriptionService = (function () {
 					} else return Promise.reject("Subscription at address: " + subscriptionUrl + " failed. Status code " + response.status);
 				}
 				return subscriptionId;
+			}, function (err) {
+				console.log("error the output was not parsable");
+				console.log(err);
 			});
 		}
 	}, {

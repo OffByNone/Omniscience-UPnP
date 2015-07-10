@@ -1,4 +1,3 @@
-///<reference path="../support/jasmine.d.ts" />
 require("babel/register");
 const ServiceExecutor = require('../../lib/Services/ServiceExecutor');
 
@@ -15,21 +14,21 @@ describe("ServiceExecutor", function () {
 				_sut.callService();
 				fail("expected error to be thrown.");
 			}
-			catch (err) { 
+			catch (err) {
 				//assert
 				expect(err.message).toBe("Argument 'serviceControlUrl' cannot be null.");
 			}
 		});
 		it("should throw an error when serviceUUID is null", function () {
 			//arrange
-			var serviceControlUrl = "scpd url"; 
-			
+			var serviceControlUrl = "scpd url";
+
 			//act
 			try {
 				_sut.callService(serviceControlUrl);
 				fail("expected error to be thrown.");
 			}
-			catch (err) { 
+			catch (err) {
 				//assert
 				expect(err.message).toBe("Argument 'serviceUUID' cannot be null.");
 			}
@@ -38,13 +37,13 @@ describe("ServiceExecutor", function () {
 			//arrange
 			var serviceControlUrl = "scpd url";
 			var serviceUUID = "guid knockoff";
-			
+
 			//act
 			try {
 				_sut.callService(serviceControlUrl, serviceUUID);
 				fail("expected error to be thrown.");
 			}
-			catch (err) { 
+			catch (err) {
 				//assert
 				expect(err.message).toBe("Argument 'serviceMethod' cannot be null.");
 			}
@@ -54,13 +53,13 @@ describe("ServiceExecutor", function () {
 			var serviceControlUrl = "scpd url";
 			var serviceUUID = "guid knockoff";
 			var serviceMethod = "name of method on service to be called";
-			
+
 			//act
 			try {
 				_sut.callService(serviceControlUrl, serviceUUID, serviceMethod);
 				fail("expected error to be thrown.");
 			}
-			catch (err) { 
+			catch (err) {
 				//assert
 				expect(err.message).toBe("Executable Service has not yet been created.");
 			}
@@ -77,7 +76,7 @@ describe("ServiceExecutor", function () {
 				_sut.callService(serviceControlUrl, serviceUUID, serviceMethod);
 				fail("expected error to be thrown.");
 			}
-			catch (err) { 
+			catch (err) {
 				//assert
 				expect(err.message).toBe("Executable Service has been created, but method has not.");
 			}
@@ -92,10 +91,10 @@ describe("ServiceExecutor", function () {
 
 			_sut.executableServices[serviceUUID] = jasmine.createSpyObj("executableService", [serviceMethod]);
 			_sut.executableServices[serviceUUID][serviceMethod].and.returnValue(result);
-			
+
 			//act
 			var actual = _sut.callService(serviceControlUrl, serviceUUID, serviceMethod, data);
-			
+
 			//assert
 			expect(_sut.executableServices[serviceUUID][serviceMethod]).toHaveBeenCalledWith(serviceControlUrl, data);
 			expect(actual).toBe(result);

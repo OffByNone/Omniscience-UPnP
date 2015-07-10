@@ -1,4 +1,3 @@
-///<reference path="../support/jasmine.d.ts" />
 require("babel/register");
 const UPnPServiceFactory = require('../../lib/Factories/UPnPServiceFactory');
 const Constants = require('../../lib/Constants');
@@ -26,7 +25,7 @@ describe("UPnPServiceFactory", function () {
 	});
 
 	describe("create", function () {
-		it("should set up properties correctly and not try to fetch more information when the scpdurl is not a valid uri", function () { 
+		it("should set up properties correctly and not try to fetch more information when the scpdurl is not a valid uri", function () {
 			//arrange
 			var serviceXml = "xml for the service";
 			var location = "location of the device";
@@ -63,7 +62,7 @@ describe("UPnPServiceFactory", function () {
 				else fail("unexpected url " + url + " was passed in");
 
 			});
-			_mockUPnPExtensionInfoFactory.createFromString = jasmine.createSpy("createFromString").and.callFake(function (thingToCreate) {
+			_mockUPnPExtensionInfoFactory.create = jasmine.createSpy("create").and.callFake(function (thingToCreate) {
 				if (thingToCreate == serviceId) return serviceIdUPnP;
 				if (thingToCreate == serviceType) return serviceTypeUPnP;
 				else fail("unexpected parameter was passed in");
@@ -71,10 +70,10 @@ describe("UPnPServiceFactory", function () {
 
 			_mockUrlProvider.isValidUri = jasmine.createSpy("isValidUri").and.returnValue(false);
 
-			
+
 			//act
 			var actual = _sut.create(serviceXml, location, base, serverIP);
-			
+
 			//assert
 			expect(actual.controlUrl).toBe(controlUrlUrl);
 			expect(actual.eventSubUrl).toBe(eventSubUrlUrl);
@@ -92,11 +91,11 @@ describe("UPnPServiceFactory", function () {
 			expect(_mockUrlProvider.toUrl).toHaveBeenCalledWith(controlUrl, location, base);
 			expect(_mockUrlProvider.toUrl).toHaveBeenCalledWith(eventSubUrl, location, base);
 			expect(_mockUrlProvider.toUrl).toHaveBeenCalledWith(scpdUrl, location, base);
-			expect(_mockUPnPExtensionInfoFactory.createFromString).toHaveBeenCalledWith(serviceId);
-			expect(_mockUPnPExtensionInfoFactory.createFromString).toHaveBeenCalledWith(serviceType);
+			expect(_mockUPnPExtensionInfoFactory.create).toHaveBeenCalledWith(serviceId);
+			expect(_mockUPnPExtensionInfoFactory.create).toHaveBeenCalledWith(serviceType);
 			expect(_mockUrlProvider.isValidUri).toHaveBeenCalledWith(scpdUrlUrl);
 		});
-		it("should Fetch more information when the scpdurl is a valid uri", function () { 
+		it("should Fetch more information when the scpdurl is a valid uri", function () {
 			//arrange
 			var serviceXml = "xml for the service";
 			var location = "location of the device";
@@ -138,7 +137,7 @@ describe("UPnPServiceFactory", function () {
 				else fail("unexpected url " + url + " was passed in");
 
 			});
-			_mockUPnPExtensionInfoFactory.createFromString = jasmine.createSpy("createFromString").and.callFake(function (thingToCreate) {
+			_mockUPnPExtensionInfoFactory.create = jasmine.createSpy("create").and.callFake(function (thingToCreate) {
 				if (thingToCreate == serviceId) return serviceIdUPnP;
 				if (thingToCreate == serviceType) return serviceTypeUPnP;
 				else fail("unexpected parameter was passed in");
@@ -185,12 +184,12 @@ describe("UPnPServiceFactory", function () {
 			var fetchResponse = { _bodyText: "_bodyText" };
 			var fetchResult = jasmine.createSpyObj("fetchResult", ["then"]);
 			_mockFetch.and.returnValue(fetchResult);
-			
+
 			_mockServiceExecutor.executableServices = {};
-			
+
 			//act
 			var actual = _sut.create(serviceXml, location, base, "ip address of the server which found the device");
-			
+
 			//assert
 			expect(_mockFetch).toHaveBeenCalledWith(scpdUrlUrl);
 			expect(fetchResult.then).toHaveBeenCalledWith(jasmine.any(Function));

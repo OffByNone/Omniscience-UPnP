@@ -31,6 +31,13 @@ var PassiveSearcher = (function (_Eventable) {
 			if (!this._isInitialized) this._initializeSSDPClients();
 		}
 	}, {
+		key: 'stop',
+		value: function stop() {
+			this._ssdpClients.forEach(function (ssdpClient) {
+				return ssdpClient.stop();
+			});
+		}
+	}, {
 		key: '_initializeSSDPClients',
 		value: function _initializeSSDPClients() {
 			var _this = this;

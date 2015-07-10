@@ -1,4 +1,3 @@
-///<reference path="./support/jasmine.d.ts" />
 require("babel/register");
 const DeviceLocator = require('../../lib/Searcher/DeviceLocator');
 const Constants = require('../../lib/Constants');
@@ -17,12 +16,25 @@ describe("DeviceLocator", function () {
 		_mockPassiveSearcher = jasmine.createSpyObj("_mockPassiveSearcher", ["on", "search"]);
 		_sut = new DeviceLocator(_mockTimer, _mockFetch, _mockActiveSearcher, _mockPassiveSearcher);
 	});
+	describe("stop", function () {
+		it("should stop both the passive and active searchers", function () {
+			//arrange
+			_mockActiveSearcher.stop = jasmine.createSpy("stop");
+			_mockPassiveSearcher.stop = jasmine.createSpy("stop");
 
+			//act
+			_sut.stop();
+
+			//assert
+			expect(_mockActiveSearcher.stop).toHaveBeenCalledWith();
+			expect(_mockPassiveSearcher.stop).toHaveBeenCalledWith();
+		});
+	});
 	describe("search", function () {
 		it("should initialize then trigger a search on both searchers, when they are not initialized", function () {
 			//act/arrange
 			_sut.search();
-			
+
 			//assert
 			expect(_mockActiveSearcher.on).toHaveBeenCalledWith("found", jasmine.any(Function));
 			expect(_mockActiveSearcher.search).toHaveBeenCalledWith();
@@ -34,13 +46,13 @@ describe("DeviceLocator", function () {
 		it("should not initialize the searchers when they are already initialized", function () {
 			//act/arange
 			_sut.search();
-			
+
 			//reset call counts
 			_mockActiveSearcher.on.calls.reset();
 			_mockPassiveSearcher.on.calls.reset();
 
 			_sut.search();
-			
+
 			//assert
 			expect(_mockActiveSearcher.on).not.toHaveBeenCalled();
 			expect(_mockActiveSearcher.search.calls.count()).toBe(2);
@@ -58,10 +70,10 @@ describe("DeviceLocator", function () {
 				_sut.search();
 
 				var lostDeviceArgs = _mockPassiveSearcher.on.calls.argsFor(1);
-				
+
 				//act
 				lostDeviceArgs[1](headers);
-				
+
 				//assert
 				expect(lostFunction).toHaveBeenCalledWith(deviceId);
 			});
@@ -70,7 +82,7 @@ describe("DeviceLocator", function () {
 			it("should set active and passive searcher found events to the same function", function () {
 				//act/arrange
 				_sut.search();
-				
+
 				//assert
 				var activeSearcherFoundArgs = _mockActiveSearcher.on.calls.argsFor(0);
 				var passiveSearcherFoundArgs = _mockPassiveSearcher.on.calls.argsFor(0);
@@ -89,14 +101,14 @@ describe("DeviceLocator", function () {
 				_sut.search();
 
 				var foundDeviceArgs = _mockPassiveSearcher.on.calls.argsFor(0);
-				
+
 				//act
 				foundDeviceArgs[1](headers, false);
-				
+
 				//assert
 				expect(foundFunction).toHaveBeenCalledWith(id, headers.location, headers.fromAddress, headers.serverIP);
 			});
-			it("should emit deviceFound event when ignoreDebounce is true", function () { 
+			it("should emit deviceFound event when ignoreDebounce is true", function () {
 				//arrange
 				_mockTimer.clearTimeout = jasmine.createSpy("clearTimeout");
 
@@ -108,18 +120,18 @@ describe("DeviceLocator", function () {
 				_sut.search();
 
 				var foundDeviceArgs = _mockPassiveSearcher.on.calls.argsFor(0);
-								
+
 				//act
 				foundDeviceArgs[1](headers, true); //estabilish a lastResponse
-				
+
 				foundFunction.calls.reset();
 
 				foundDeviceArgs[1](headers, true);	//call again once it has a last response
-						
+
 				//assert
 				expect(foundFunction).toHaveBeenCalledWith(id, headers.location, headers.fromAddress, headers.serverIP);
 			});
-			it("should emit deviceFound event when debounceTimeout for device has expired", function () { 
+			it("should emit deviceFound event when debounceTimeout for device has expired", function () {
 				//arrange
 				_mockTimer.clearTimeout = jasmine.createSpy("clearTimeout");
 
@@ -132,18 +144,18 @@ describe("DeviceLocator", function () {
 				_sut.search();
 
 				var foundDeviceArgs = _mockPassiveSearcher.on.calls.argsFor(0);
-								
+
 				//act
 				foundDeviceArgs[1](headers, false); //estabilish a lastResponse
-				
+
 				foundFunction.calls.reset();
 
 				foundDeviceArgs[1](headers, false);	//call again once it has a last response
-						
+
 				//assert
 				expect(foundFunction).toHaveBeenCalledWith(id, headers.location, headers.fromAddress, headers.serverIP);
 			});
-			it("should not emit deviceFound event when debounceTimeout for device has not expired, and ignoreDebounce is false", function () { 
+			it("should not emit deviceFound event when debounceTimeout for device has not expired, and ignoreDebounce is false", function () {
 				//arrange
 				_mockTimer.clearTimeout = jasmine.createSpy("clearTimeout");
 
@@ -154,18 +166,18 @@ describe("DeviceLocator", function () {
 				_sut.search();
 
 				var foundDeviceArgs = _mockPassiveSearcher.on.calls.argsFor(0);
-								
+
 				//act
 				foundDeviceArgs[1](headers, false); //estabilish a lastResponse
-				
+
 				foundFunction.calls.reset();
 
 				foundDeviceArgs[1](headers, false);	//call again once it has a last response
-						
+
 				//assert
 				expect(foundFunction).not.toHaveBeenCalled();
 			});
-			it("should emit deviceFound event when cache-control timeout expires and pinging device is successful", function () { 
+			it("should emit deviceFound event when cache-control timeout expires and pinging device is successful", function () {
 				//arrange
 				_mockTimer.clearTimeout = jasmine.createSpy("clearTimeout");
 				_mockTimer.setTimeout = jasmine.createSpy("setTimeout");
@@ -187,7 +199,7 @@ describe("DeviceLocator", function () {
 
 				//act
 				foundDeviceArgs[1](headers, false);
-						
+
 				//assert
 				expect(_mockTimer.setTimeout).toHaveBeenCalledWith(jasmine.any(Function), timeout * 1000);
 
@@ -222,11 +234,11 @@ describe("DeviceLocator", function () {
 				foundDeviceArgs[1](headers, false); //estabilish a timeout to clear
 				_mockTimer.clearTimeout.calls.reset();
 				foundDeviceArgs[1](headers, false);
-						
+
 				//assert
 				expect(_mockTimer.clearTimeout).toHaveBeenCalledWith(expected);
 			});
-			it("should emit deviceLost event when cache-control timeout expires and pinging device is not successful", function () { 
+			it("should emit deviceLost event when cache-control timeout expires and pinging device is not successful", function () {
 				//arrange
 				_mockTimer.clearTimeout = jasmine.createSpy("clearTimeout");
 				_mockTimer.setTimeout = jasmine.createSpy("setTimeout");
@@ -249,7 +261,7 @@ describe("DeviceLocator", function () {
 
 				//act
 				foundDeviceArgs[1](headers, false);
-						
+
 				//assert
 				expect(_mockTimer.setTimeout).toHaveBeenCalledWith(jasmine.any(Function), timeout * 1000);
 
@@ -263,9 +275,9 @@ describe("DeviceLocator", function () {
 
 				expect(lostFunction).toHaveBeenCalledWith(deviceId);
 			});
-			it("should not update debounce wait time when timeout has not expired", function () { 
+			it("should not update debounce wait time when timeout has not expired", function () {
 				//todo: write this test
-				
+
 			});
 		});
 

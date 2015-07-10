@@ -1,4 +1,3 @@
-///<reference path="./support/jasmine.d.ts" />
 require("babel/register");
 const PassiveSearcher = require('../../lib/Searcher/PassiveSearcher');
 const Constants = require('../../lib/Constants');
@@ -10,7 +9,23 @@ describe("PassiveSearcher", function () {
 		_mockSSDPClients = [];
 		_sut = new PassiveSearcher(_mockSSDPClients);
 	});
+	describe("stop", function () {
+		it("should stop ssdpClients", function () {
+			//arrange
+			var mockSSDPClient1 = jasmine.createSpyObj("mockSSDPClient1", ["stop"]);
+			var mockSSDPClient2 = jasmine.createSpyObj("mockSSDPClient2", ["stop"]);
 
+			_mockSSDPClients.push(mockSSDPClient1);
+			_mockSSDPClients.push(mockSSDPClient2);
+
+			//act
+			_sut.stop();
+
+			//assert
+			expect(mockSSDPClient1.stop).toHaveBeenCalledWith();
+			expect(mockSSDPClient2.stop).toHaveBeenCalledWith();
+		});
+	});
 	describe("search", function () {
 		it("should initialize each ssdpClient when they are not initialized", function () {
 			//arrange
@@ -19,10 +34,10 @@ describe("PassiveSearcher", function () {
 
 			_mockSSDPClients.push(mockSSDPClient1);
 			_mockSSDPClients.push(mockSSDPClient2);
-			
+
 			//act
 			_sut.search();
-			
+
 			//assert
 			expect(mockSSDPClient1.joinMulticast).toHaveBeenCalledWith();
 			expect(mockSSDPClient1.startListening).toHaveBeenCalledWith();
@@ -40,17 +55,17 @@ describe("PassiveSearcher", function () {
 			var mockSSDPClient1 = jasmine.createSpyObj("mockSSDPClient1", ["joinMulticast", "startListening", "on"]);
 
 			_mockSSDPClients.push(mockSSDPClient1);
-			
+
 			//act
 			_sut.search();
-			
+
 			//reset call counts
 			mockSSDPClient1.joinMulticast.calls.reset();
 			mockSSDPClient1.startListening.calls.reset();
 			mockSSDPClient1.on.calls.reset();
 
 			_sut.search();
-			
+
 			//assert
 			expect(mockSSDPClient1.joinMulticast).not.toHaveBeenCalled();
 			expect(mockSSDPClient1.startListening).not.toHaveBeenCalled();
@@ -68,11 +83,11 @@ describe("PassiveSearcher", function () {
 				_sut.search();
 
 				var messageReceivedArgs = mockSSDPClient1.on.calls.allArgs().filter(function (args) { return args[0] === "messageReceived"; })[0];
-				
+
 				//act
 				messageReceivedArgs[1](headers);
 				//assert
-				expect(foundFunction).toHaveBeenCalledWith(headers, true);	
+				expect(foundFunction).toHaveBeenCalledWith(headers, true);
 			});
 			it("should emit found event with headers and ignoreDebounce set to false when service type is not PeerNameResolutionProtocolST and message type is new", function () {
 				//arrange
@@ -85,11 +100,11 @@ describe("PassiveSearcher", function () {
 				_sut.search();
 
 				var messageReceivedArgs = mockSSDPClient1.on.calls.allArgs().filter(function (args) { return args[0] === "messageReceived"; })[0];
-				
+
 				//act
 				messageReceivedArgs[1](headers);
 				//assert
-				expect(foundFunction).toHaveBeenCalledWith(headers, false);	
+				expect(foundFunction).toHaveBeenCalledWith(headers, false);
 			});
 			it("should emit lost event with headers when service type is not PeerNameResolutionProtocolST and message type is gone", function () {
 				//arrange
@@ -102,12 +117,12 @@ describe("PassiveSearcher", function () {
 				_sut.search();
 
 				var messageReceivedArgs = mockSSDPClient1.on.calls.allArgs().filter(function (args) { return args[0] === "messageReceived"; })[0];
-				
+
 				//act
 				messageReceivedArgs[1](headers);
 				//assert
-				expect(foundFunction).toHaveBeenCalledWith(headers);	
-			});				
+				expect(foundFunction).toHaveBeenCalledWith(headers);
+			});
 			it("should not emit found event when service type is PeerNameResolutionProtocolST", function () {
 				//arrange
 				var mockSSDPClient1 = jasmine.createSpyObj("mockSSDPClient1", ["joinMulticast", "startListening", "on"]);
@@ -119,11 +134,11 @@ describe("PassiveSearcher", function () {
 				_sut.search();
 
 				var messageReceivedArgs = mockSSDPClient1.on.calls.allArgs().filter(function (args) { return args[0] === "messageReceived"; })[0];
-				
+
 				//act
 				messageReceivedArgs[1](headers);
 				//assert
-				expect(foundFunction).not.toHaveBeenCalled();	
+				expect(foundFunction).not.toHaveBeenCalled();
 
 			});
 		});

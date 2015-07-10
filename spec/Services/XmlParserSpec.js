@@ -1,4 +1,3 @@
-///<reference path="../support/jasmine.d.ts" />
 require("babel/register");
 const XmlParser = require('../../lib/Services/XmlParser');
 const Constants = require('../../lib/Constants');
@@ -18,10 +17,10 @@ describe("XmlParser", function () {
 			var xmlResult = "some xml";
 
 			_mockDomParser.parseFromString = jasmine.createSpy("parseFromString").and.returnValue(xmlResult);
-			
+
 			//act
 			var actual = _sut.parseFromString(stringToBeConverted);
-			
+
 			//assert
 			expect(_mockDomParser.parseFromString).toHaveBeenCalledWith(stringToBeConverted, 'text/xml');
 			expect(actual).toBe(xmlResult);
@@ -29,10 +28,10 @@ describe("XmlParser", function () {
 		it("should return null when the argument passed in is not a string", function () {
 			//arrange/act
 			var actual = _sut.parseFromString(null);
-			
+
 			//assert
 			expect(actual).toBeNull();
-		});		
+		});
 	});
 	describe("getElements", function () {
 		it("should return all matching elements as array of elements when xml is not null and contains a querySelectorAll function", function () {
@@ -42,10 +41,10 @@ describe("XmlParser", function () {
 			var result = ["t", "s"];
 
 			xml.querySelectorAll.and.returnValue(result);
-			
+
 			//act
 			var actual = _sut.getElements(xml, selector);
-			
+
 			//assert
 			expect(xml.querySelectorAll).toHaveBeenCalledWith(selector);
 			expect(Array.isArray(actual)).toBeTruthy();
@@ -58,7 +57,7 @@ describe("XmlParser", function () {
 			var selector = "selector to match against";
 			//act
 			var actual = _sut.getElements(null, selector);
-			
+
 			//assert
 			expect(Array.isArray(actual)).toBeTruthy();
 			expect(actual.length).toBe(0);
@@ -69,7 +68,7 @@ describe("XmlParser", function () {
 			var selector = "selector to match against";
 			//act
 			var actual = _sut.getElements(xml, selector);
-			
+
 			//assert
 			expect(Array.isArray(actual)).toBeTruthy();
 			expect(actual.length).toBe(0);
@@ -83,10 +82,10 @@ describe("XmlParser", function () {
 			var result = "tsd";
 
 			xml.querySelector.and.returnValue(result);
-			
+
 			//act
 			var actual = _sut.getElement(xml, selector);
-			
+
 			//assert
 			expect(xml.querySelector).toHaveBeenCalledWith(selector);
 			expect(actual).toBe(result);
@@ -98,7 +97,7 @@ describe("XmlParser", function () {
 
 			//act
 			var actual = _sut.getElement(xml, selector);
-			
+
 			//assert
 			expect(actual).toBeNull();
 		});
@@ -109,7 +108,7 @@ describe("XmlParser", function () {
 
 			//act
 			var actual = _sut.getElement(xml, selector);
-			
+
 			//assert
 			expect(actual).toBeNull();
 		});
@@ -122,10 +121,10 @@ describe("XmlParser", function () {
 			var result = "tsd";
 
 			xml.querySelector.and.returnValue(result);
-			
+
 			//act
 			var actual = _sut.hasNode(xml, selector);
-			
+
 			//assert
 			expect(xml.querySelector).toHaveBeenCalledWith(selector);
 			expect(actual).toBeTruthy();
@@ -136,10 +135,10 @@ describe("XmlParser", function () {
 			var selector = "selector to match against";
 
 			xml.querySelector.and.returnValue(null);
-			
+
 			//act
 			var actual = _sut.hasNode(xml, selector);
-			
+
 			//assert
 			expect(xml.querySelector).toHaveBeenCalledWith(selector);
 			expect(actual).toBeFalsy();
@@ -151,7 +150,7 @@ describe("XmlParser", function () {
 
 			//act
 			var actual = _sut.hasNode(xml, selector);
-			
+
 			//assert
 			expect(actual).toBeFalsy();
 		});
@@ -162,7 +161,7 @@ describe("XmlParser", function () {
 
 			//act
 			var actual = _sut.hasNode(xml, selector);
-			
+
 			//assert
 			expect(actual).toBeFalsy();
 		});
@@ -175,10 +174,10 @@ describe("XmlParser", function () {
 			var result = { innerHTML: "some text" };
 
 			xml.querySelector.and.returnValue(result);
-			
+
 			//act
 			var actual = _sut.getText(xml, selector);
-			
+
 			//assert
 			expect(xml.querySelector).toHaveBeenCalledWith(selector);
 			expect(actual).toBe(result.innerHTML);
@@ -189,13 +188,13 @@ describe("XmlParser", function () {
 			var selector = "selector to match against";
 
 			xml.querySelector.and.returnValue(null);
-			
+
 			//act
 			var actual = _sut.getText(xml, selector);
-			
+
 			//assert
 			expect(xml.querySelector).toHaveBeenCalledWith(selector);
-			expect(actual).toBeUndefined();
+			expect(actual).toBeNull();
 		});
 		it("should return false when xml is null", function () {
 			//arrange
@@ -204,7 +203,7 @@ describe("XmlParser", function () {
 
 			//act
 			var actual = _sut.getText(xml, selector);
-			
+
 			//assert
 			expect(actual).toBeNull();
 		});
@@ -215,7 +214,7 @@ describe("XmlParser", function () {
 
 			//act
 			var actual = _sut.getText(xml, selector);
-			
+
 			//assert
 			expect(actual).toBeNull();
 		});
@@ -226,13 +225,13 @@ describe("XmlParser", function () {
 			var node = { attributes: jasmine.createSpyObj("attributes", ["getNamedItem"]) };
 			var attributeName = "attributeName";
 			var attributeValue = "attributeValue";
-			var attribute = { value: attributeValue }; 
+			var attribute = { value: attributeValue };
 
 			node.attributes.getNamedItem.and.returnValue(attribute);
 
 			//act
 			var actual = _sut.getAttribute(node, attributeName);
-			
+
 			//assert
 			expect(node.attributes.getNamedItem).toHaveBeenCalledWith(attributeName);
 			expect(actual).toBe(attributeValue);
@@ -247,7 +246,7 @@ describe("XmlParser", function () {
 
 			//act
 			var actual = _sut.getAttribute(node, attributeName);
-			
+
 			//assert
 			expect(node.attributes.getNamedItem).toHaveBeenCalledWith(attributeName);
 			expect(actual).toBeNull();

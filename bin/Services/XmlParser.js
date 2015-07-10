@@ -34,7 +34,7 @@ var XmlParser = (function () {
 	}, {
 		key: "getText",
 		value: function getText(xml, selector) {
-			return xml && typeof xml.querySelector === "function" ? (xml.querySelector(selector) || {}).innerHTML : null;
+			return xml && typeof xml.querySelector === "function" ? (xml.querySelector(selector) || { innerHTML: null }).innerHTML : null;
 		}
 	}, {
 		key: "getAttribute",

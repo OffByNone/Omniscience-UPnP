@@ -1,4 +1,3 @@
-///<reference path="../support/jasmine.d.ts" />
 require("babel/register");
 const ServicePropertyFactory = require('../../lib/Factories/ServicePropertyFactory');
 const Constants = require('../../lib/Constants');
@@ -12,7 +11,7 @@ describe("ServicePropertyFactory", function () {
 	});
 
 	describe("create", function () {
-		it("should create a new serviceproperty from the xml passed in", function () { 
+		it("should create a new serviceproperty from the xml passed in", function () {
 			//arrange
 			var xml = "valid xml goes here";
 			var name = "that's not my name";
@@ -30,11 +29,11 @@ describe("ServicePropertyFactory", function () {
 			_mockXmlParser.getAttribute = jasmine.createSpy("getAttribute").and.returnValue("yes");
 			_mockXmlParser.getElements = jasmine.createSpy("getElements").and.returnValue(allowedValues);
 			_mockXmlParser.hasNode = jasmine.createSpy("hasNode").and.returnValue(false);
-			
-			
+
+
 			//act
 			var actual = _sut.create(xml);
-			
+
 			//assert
 			expect(actual.name).toBe(name);
 			expect(actual.datatype).toBe(dataType);
@@ -72,10 +71,10 @@ describe("ServicePropertyFactory", function () {
 			_mockXmlParser.getAttribute = jasmine.createSpy("getAttribute").and.returnValue("yes");
 			_mockXmlParser.getElements = jasmine.createSpy("getElements").and.returnValue(allowedValues);
 			_mockXmlParser.hasNode = jasmine.createSpy("hasNode").and.returnValue(true);
-			
+
 			//act
 			var actual = _sut.create(xml);
-			
+
 			//assert
 			expect(actual.allowedValueRange.minimum).toBe(minimum);
 			expect(actual.allowedValueRange.maximum).toBe(maximum);
@@ -99,10 +98,10 @@ describe("ServicePropertyFactory", function () {
 			_mockXmlParser.getAttribute = jasmine.createSpy("getAttribute").and.returnValue("no");
 			_mockXmlParser.getElements = jasmine.createSpy("getElements").and.returnValue(allowedValues);
 			_mockXmlParser.hasNode = jasmine.createSpy("hasNode").and.returnValue(false);
-			
+
 			//act
 			var actual = _sut.create(xml);
-			
+
 			//assert
 			expect(actual.evented).toBeFalsy();
 		});

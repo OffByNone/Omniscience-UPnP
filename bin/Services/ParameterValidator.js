@@ -3,7 +3,8 @@
 module.exports = {
 	validate: function validate(validationInfo, parameter) {
 		//todo: validate datatype as well
-		if (!parameter) throw new Error("Missing required argument: " + validationInfo.name);
+		//todo: make a test that checks for false and 0 should work
+		if (parameter == null) throw new Error("Missing required argument: " + validationInfo.name);
 
 		if (validationInfo.allowedValues.length > 0 && validationInfo.allowedValues.every(function (allowedValue) {
 			return allowedValue != parameter;

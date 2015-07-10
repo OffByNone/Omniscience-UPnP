@@ -1,4 +1,3 @@
-///<reference path="../support/jasmine.d.ts" />
 require("babel/register");
 const DeviceFactory = require('../../lib/Factories/DeviceFactory');
 const Constants = require('../../lib/Constants');
@@ -22,16 +21,18 @@ describe("DeviceFactory", function () {
 	describe("create", function () {
 		it("should throw an error when root element is not found", function () {
 			var device = {};
+			var responseText = "xml from device as text";
 			var responseXml = "xml from device";
 			var location = "address of device";
 			var fromAddress = "address of device";
 			var serverIP = "ip of me";
 
 			_mockXmlParser.getElement = jasmine.createSpy("getElement").and.returnValue(null);
-			
-			//act 
+			_mockXmlParser.parseFromString = jasmine.createSpy("parseFromString").and.returnValue(responseXml);
+
+			//act
 			try {
-				_sut.create(device, responseXml, location, fromAddress, serverIP);
+				_sut.create(device, responseText, location, fromAddress, serverIP);
 				fail("expected error to be thrown");
 			}
 			catch (err) {
@@ -41,6 +42,7 @@ describe("DeviceFactory", function () {
 		});
 		it("should throw an error when device node is not found inside of root node", function () {
 			var device = {};
+			var responseText = "xml from device as text";
 			var responseXml = "xml from device";
 			var location = "address of device";
 			var fromAddress = "address of device";
@@ -48,6 +50,7 @@ describe("DeviceFactory", function () {
 			var root = "root";
 			var baseUrl = "baseUrl";
 
+			_mockXmlParser.parseFromString = jasmine.createSpy("parseFromString").and.returnValue(responseXml);
 			_mockXmlParser.getElement = jasmine.createSpy("getElement").and.callFake(function (xml, elName) {
 				if (xml !== responseXml && xml !== root) fail("unexpected xml '" + xml + "'");
 
@@ -62,10 +65,10 @@ describe("DeviceFactory", function () {
 				if (elName === "baseUrl") return baseUrl;
 				else fail("unexpected element name '" + elName + "'");
 			});
-			
-			//act 
+
+			//act
 			try {
-				_sut.create(device, responseXml, location, fromAddress, serverIP);
+				_sut.create(device, responseText, location, fromAddress, serverIP);
 				fail("expected error to be thrown");
 			}
 			catch (err) {
@@ -75,6 +78,7 @@ describe("DeviceFactory", function () {
 		});
 		it("should properly setup device object from xml passed in", function () {
 			var device = { services: [] };
+			var responseText = "xml from device as text";
 			var responseXml = "xml from device";
 			var location = "address of device";
 			var fromAddress = "address of device";
@@ -91,6 +95,7 @@ describe("DeviceFactory", function () {
 			var ssdpDescriptionLocation = "ssdpDescriptionLocation";
 			var deviceResponseHash = "deviceResponseHash";
 
+			_mockXmlParser.parseFromString = jasmine.createSpy("parseFromString").and.returnValue(responseXml);
 			_mockXmlParser.getElement = jasmine.createSpy("getElement").and.callFake(function (xml, elName) {
 				if (xml !== responseXml && xml !== root) fail("unexpected xml '" + xml + "'");
 
@@ -130,10 +135,10 @@ describe("DeviceFactory", function () {
 			_mockMD5.and.returnValue(deviceResponseHash);
 			spyOn(_sut, "_parseDeviceAttributes");
 			spyOn(_sut, "_parseDeviceIcons");
-			
-			
-			//act 
-			_sut.create(device, responseXml, location, fromAddress, serverIP);
+
+
+			//act
+			_sut.create(device, responseText, location, fromAddress, serverIP);
 
 			//assert
 			expect(_sut._parseDeviceAttributes).toHaveBeenCalledWith(device, deviceElement, baseUrl, location, serverIP);
@@ -155,6 +160,7 @@ describe("DeviceFactory", function () {
 		});
 		it("should use the location.origin when base is null for the device address", function () {
 			var device = { services: [] };
+			var responseText = "xml from device as text";
 			var responseXml = "xml from device";
 			var location = "address of device";
 			var fromAddress = "address of device";
@@ -163,24 +169,21 @@ describe("DeviceFactory", function () {
 			var locationOrigin = "origin of the location";
 
 			_mockXmlParser.getElement = jasmine.createSpy("getElement").and.returnValue(" ");
-
+			_mockXmlParser.parseFromString = jasmine.createSpy("parseFromString").and.returnValue(responseXml);
 			_mockXmlParser.getText = jasmine.createSpy("getText").and.returnValue("");
-			
 			_mockXmlParser.getElements = jasmine.createSpy("getElements").and.returnValue([]);
-
 			_mockServiceInfoFactory.create = jasmine.createSpy("create").and.returnValue(" ");
 
 			_mockUrlProvider.createUrl = jasmine.createSpy("createUrl").and.callFake(function (theArgument) {
 				if (theArgument === location) return { origin: locationOrigin };
 				if (theArgument === locationOrigin) return deviceAddress;
-
 			});
 
 			spyOn(_sut, "_parseDeviceAttributes");
 			spyOn(_sut, "_parseDeviceIcons");
-			
-			//act 
-			_sut.create(device, responseXml, location, fromAddress, serverIP);
+
+			//act
+			_sut.create(device, responseText, location, fromAddress, serverIP);
 
 			//assert
 			expect(_mockUrlProvider.createUrl).toHaveBeenCalledWith(location);
@@ -189,7 +192,7 @@ describe("DeviceFactory", function () {
 		});
 	});
 	describe("_parseDeviceAttributes", function () {
-		it("should add each icon in the xml to the list of device icons", function () { 
+		it("should add each icon in the xml to the list of device icons", function () {
 			//arrange
 			var device = { icons: [] };
 			var deviceXml = "devXml";
@@ -226,10 +229,10 @@ describe("DeviceFactory", function () {
 				if (elName === "deviceType") return deviceType;
 				else fail("unexpected element name '" + elName + "'");
 			});
-			
+
 			//act
 			_sut._parseDeviceAttributes(device, deviceXml, location, base);
-			
+
 			//assert
 			expect(_mockUPnPExtensionInfoFactory.create).toHaveBeenCalledWith(deviceType);
 			expect(device.serialNumber).toBe(serialNumber);
@@ -247,7 +250,7 @@ describe("DeviceFactory", function () {
 		});
 	});
 	describe("_parseDeviceIcons", function () {
-		it("should add each icon in the xml to the list of device icons", function () { 
+		it("should add each icon in the xml to the list of device icons", function () {
 			//arrange
 			var device = { icons: [] };
 			var deviceXml = "devXml";
@@ -303,10 +306,10 @@ describe("DeviceFactory", function () {
 					if (elName === "url") return icon2Url;
 				}
 			});
-			
+
 			//act
 			_sut._parseDeviceIcons(device, deviceXml, location, base);
-			
+
 			//assert
 			expect(_mockXmlParser.getElements).toHaveBeenCalledWith(deviceXml, "iconList icon");
 			expect(device.icons.length).toBe(2);
