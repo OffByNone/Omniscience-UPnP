@@ -40,7 +40,7 @@ var SubscriptionService = (function () {
 				method: "SUBSCRIBE",
 				headers: headers
 			}).then(function (response) {
-				subscriptionId = response.headers.get("sid");
+				subscriptionId = response.headers.get("sid").replace("uuid:", "");
 				if (!response.ok) {
 					//handle 405 method not allowed
 					if (response.status == Constants.PreconditionFailed) {
