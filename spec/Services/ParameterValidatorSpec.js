@@ -132,7 +132,7 @@ describe("ParameterValidator", function () {
 			}
 			catch (err) {
 				//assert
-				expect(err.message).toBe(`Argument '${validationInfo.name}' is '${parameter}', but must be a multiple of '${validationInfo.step}' starting at ${validationInfo.minimum}`);
+				expect(err.message).toBe(`Argument '${validationInfo.name}' is '${parameter}', but must be a multiple of '${validationInfo.allowedValueRange.step}' starting at ${validationInfo.allowedValueRange.minimum}`);
 			}
 		});
 	});

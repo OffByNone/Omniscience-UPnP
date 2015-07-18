@@ -1,5 +1,4 @@
 "use strict";
-
 var ServiceExecutor = {
         executableServices: {},
         callService: function callService(serviceControlUrl, serviceUUID, serviceMethod, data) {

@@ -1,5 +1,4 @@
 'use strict';
-
 var UPnPExtensionInfo = require('../Entities/UPnPExtensionInfo');
 var Constants = require('../Constants');
 

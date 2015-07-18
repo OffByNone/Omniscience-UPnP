@@ -31,7 +31,7 @@ var Utilities = _require.Utilities;
 var SdkResolver = require('omniscience-sdk-resolver');
 
 var UPnP = (function () {
-	function UPnP(sdk) {
+	function UPnP() {
 		_classCallCheck(this, UPnP);
 
 		this._sdk = new SdkResolver().resolve();
@@ -43,7 +43,7 @@ var UPnP = (function () {
 		value: function createDeviceService() {
 			var _this = this;
 
-			return this._createDeviceLocator().then(function (deviceLocator) {
+			return this.createDeviceLocator().then(function (deviceLocator) {
 				return new DeviceService(new DeviceFactory(new XmlParser(_this._sdk.createDomParser()), _this._utilities.createUrlProvider(), _this._utilities.MD5(), new UPnPServiceFactory(_this._utilities.fetch(), new XmlParser(_this._sdk.createDomParser()), _this._utilities.createUrlProvider(), UPnPExtensionInfoFactory, new ServicePropertyFactory(new XmlParser(_this._sdk.createDomParser())), new ServiceMethodFactory(new XmlParser(_this._sdk.createDomParser())), ServiceExecutor, new ExecutableServiceMethodFactory(new XmlParser(_this._sdk.createDomParser()), new SOAPService(_this._utilities.fetch(), new XmlParser(_this._sdk.createDomParser()), StringUtils), ParameterValidator)), UPnPExtensionInfoFactory), deviceLocator, _this._sdk.storage(), _this._sdk.notifications(), _this._utilities.fetch(), _this._utilities.MD5());
 			});
 		}
@@ -58,8 +58,8 @@ var UPnP = (function () {
 			return ServiceExecutor;
 		}
 	}, {
-		key: '_createDeviceLocator',
-		value: function _createDeviceLocator() {
+		key: 'createDeviceLocator',
+		value: function createDeviceLocator() {
 			var _this2 = this;
 
 			return this._sdk.IPResolver.resolveIPs().then(function (ipAddresses) {

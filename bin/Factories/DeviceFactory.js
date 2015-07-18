@@ -5,9 +5,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var Constants = require('../Constants');
 var UPnPVersion = require('../Entities/UPnPVersion');
-var Device = require('../Entities/Device');
 var DeviceManufacturer = require('../Entities/DeviceManufacturer');
 var DeviceModel = require('../Entities/DeviceModel');
 var Icon = require('../Entities/Icon');
@@ -39,8 +37,8 @@ var DeviceFactory = (function () {
 
 						if (!deviceXml) throw new Error('Required element \'device\' was not found inside \'root\' node');
 
-						this._parseDeviceAttributes(device, deviceXml, base, location, serverIP);
-						this._parseDeviceIcons(device, deviceXml, base, location, serverIP);
+						this._parseDeviceAttributes(device, deviceXml);
+						this._parseDeviceIcons(device, deviceXml, location, base);
 						var servicesXml = this._xmlParser.getElements(deviceXml, 'serviceList service');
 
 						servicesXml.forEach(function (serviceXml) {
@@ -60,7 +58,7 @@ var DeviceFactory = (function () {
 				}
 		}, {
 				key: '_parseDeviceAttributes',
-				value: function _parseDeviceAttributes(device, deviceXml, location, base) {
+				value: function _parseDeviceAttributes(device, deviceXml) {
 						device.serialNumber = this._xmlParser.getText(deviceXml, 'serialNumber');
 						device.webPage = this._xmlParser.getText(deviceXml, 'presentationURL');
 						device.name = this._xmlParser.getText(deviceXml, 'friendlyName');

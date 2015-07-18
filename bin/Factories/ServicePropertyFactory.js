@@ -21,7 +21,7 @@ var ServicePropertyFactory = (function () {
             property.name = this._xmlParser.getText(propertyXml, 'name');
             property.datatype = this._xmlParser.getText(propertyXml, 'dataType'); //todo: use the table containing allowed datatypes to better parse this
             property.defaultValue = this._xmlParser.getText(propertyXml, 'defaultValue');
-            property.evented = this._xmlParser.getAttribute(propertyXml, 'sendEvents') == 'yes';
+            property.evented = this._xmlParser.getAttribute(propertyXml, 'sendEvents') === 'yes';
 
             property.allowedValues = this._xmlParser.getElements(propertyXml, 'allowedValue').map(function (value) {
                 return value.innerHTML;

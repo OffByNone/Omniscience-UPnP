@@ -56,7 +56,7 @@ var DeviceService = (function (_Eventable) {
 
 			if (!this._isInitialized) {
 				this._deviceLocator.on('deviceFound', function (id, location, fromAddress, serverIP) {
-					if (location.toLowerCase().indexOf('http') != 0) location = 'http://' + location; //Microsoft special
+					if (location.toLowerCase().indexOf('http') !== 0) location = 'http://' + location; //Microsoft special
 					_this2._fetch(location).then(function (response) {
 						var deviceXml = response._bodyText;
 						var deviceResponseHash = _this2._md5(deviceXml);

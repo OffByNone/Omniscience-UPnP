@@ -35,33 +35,31 @@ var UPnPServiceFactory = (function () {
 												upnpService.type = this._upnpExtensionInfoFactory.create(this._xmlParser.getText(serviceXml, 'serviceType'));
 												upnpService.serverIP = serverIP;
 
-												if (this._urlProvider.isValidUri(upnpService.scpdUrl)) {
-																this._fetch(upnpService.scpdUrl).then(function (response) {
-																				//todo: take in the current upnpService object as a parameter, and add a hash of the response to said object so I can lazy rebuild it like I do the device			
-																				var responseXml = _this._xmlParser.parseFromString(response._bodyText);
-																				upnpService.upnpVersion = new UPnPVersion();
-																				upnpService.upnpVersion.major = _this._xmlParser.getText(responseXml, 'specVersion major');
-																				upnpService.upnpVersion.minor = _this._xmlParser.getText(responseXml, 'specVersion minor');
+												if (this._urlProvider.isValidUri(upnpService.scpdUrl)) this._fetch(upnpService.scpdUrl).then(function (response) {
+																//todo: take in the current upnpService object as a parameter, and add a hash of the response to said object so I can lazy rebuild it like I do the device
+																var responseXml = _this._xmlParser.parseFromString(response._bodyText);
+																upnpService.upnpVersion = new UPnPVersion();
+																upnpService.upnpVersion.major = _this._xmlParser.getText(responseXml, 'specVersion major');
+																upnpService.upnpVersion.minor = _this._xmlParser.getText(responseXml, 'specVersion minor');
 
-																				var propertiesXml = _this._xmlParser.getElements(responseXml, 'stateVariable');
-																				propertiesXml.forEach(function (propertyXml) {
-																								return upnpService.properties.push(_this._serviceProperyFactory.create(propertyXml));
-																				});
-
-																				var methodsXml = _this._xmlParser.getElements(responseXml, 'action');
-																				methodsXml.forEach(function (methodXml) {
-																								return upnpService.methods.push(_this._serviceMethodFactory.create(methodXml, upnpService.properties));
-																				});
-
-																				var executableService = {};
-																				upnpService.methods.forEach(function (method) {
-																								return executableService[method.name] = _this._executableServiceMethodFactory.create(method, upnpService.type.raw);
-																				});
-																				_this._serviceExecutor.executableServices[upnpService.uuid] = executableService;
-
-																				return upnpService;
+																var propertiesXml = _this._xmlParser.getElements(responseXml, 'stateVariable');
+																propertiesXml.forEach(function (propertyXml) {
+																				return upnpService.properties.push(_this._serviceProperyFactory.create(propertyXml));
 																});
-												}
+
+																var methodsXml = _this._xmlParser.getElements(responseXml, 'action');
+																methodsXml.forEach(function (methodXml) {
+																				return upnpService.methods.push(_this._serviceMethodFactory.create(methodXml, upnpService.properties));
+																});
+
+																var executableService = {};
+																upnpService.methods.forEach(function (method) {
+																				return executableService[method.name] = _this._executableServiceMethodFactory.create(method, upnpService.type.raw);
+																});
+																_this._serviceExecutor.executableServices[upnpService.uuid] = executableService;
+
+																return upnpService;
+												});
 
 												return upnpService;
 								}

@@ -141,8 +141,8 @@ describe("DeviceFactory", function () {
 			_sut.create(device, responseText, location, fromAddress, serverIP);
 
 			//assert
-			expect(_sut._parseDeviceAttributes).toHaveBeenCalledWith(device, deviceElement, baseUrl, location, serverIP);
-			expect(_sut._parseDeviceIcons).toHaveBeenCalledWith(device, deviceElement, baseUrl, location, serverIP);
+			expect(_sut._parseDeviceAttributes).toHaveBeenCalledWith(device, deviceElement);
+			expect(_sut._parseDeviceIcons).toHaveBeenCalledWith(device, deviceElement, location, baseUrl);
 			expect(_mockServiceInfoFactory.create).toHaveBeenCalledWith(service1, location, baseUrl, serverIP);
 			expect(_mockServiceInfoFactory.create).toHaveBeenCalledWith(service2, location, baseUrl, serverIP);
 			expect(device.services.length).toBe(2);
