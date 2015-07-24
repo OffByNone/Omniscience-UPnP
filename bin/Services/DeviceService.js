@@ -81,6 +81,7 @@ var DeviceService = (function (_Eventable) {
 				});
 				this._isInitialized = true;
 			}
+
 			this._deviceLocator.search(this.devices);
 		}
 	}, {

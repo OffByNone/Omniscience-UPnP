@@ -36,7 +36,7 @@ describe("PassiveSearcher", function () {
 			_mockSSDPClients.push(mockSSDPClient2);
 
 			//act
-			_sut.search();
+			_sut.listen();
 
 			//assert
 			expect(mockSSDPClient1.joinMulticast).toHaveBeenCalledWith();
@@ -57,14 +57,14 @@ describe("PassiveSearcher", function () {
 			_mockSSDPClients.push(mockSSDPClient1);
 
 			//act
-			_sut.search();
+			_sut.listen();
 
 			//reset call counts
 			mockSSDPClient1.joinMulticast.calls.reset();
 			mockSSDPClient1.startListening.calls.reset();
 			mockSSDPClient1.on.calls.reset();
 
-			_sut.search();
+			_sut.listen();
 
 			//assert
 			expect(mockSSDPClient1.joinMulticast).not.toHaveBeenCalled();
@@ -80,7 +80,7 @@ describe("PassiveSearcher", function () {
 
 				_mockSSDPClients.push(mockSSDPClient1);
 				_sut.on("found", foundFunction);
-				_sut.search();
+				_sut.listen();
 
 				var messageReceivedArgs = mockSSDPClient1.on.calls.allArgs().filter(function (args) { return args[0] === "messageReceived"; })[0];
 
@@ -97,7 +97,7 @@ describe("PassiveSearcher", function () {
 
 				_mockSSDPClients.push(mockSSDPClient1);
 				_sut.on("found", foundFunction);
-				_sut.search();
+				_sut.listen();
 
 				var messageReceivedArgs = mockSSDPClient1.on.calls.allArgs().filter(function (args) { return args[0] === "messageReceived"; })[0];
 
@@ -114,7 +114,7 @@ describe("PassiveSearcher", function () {
 
 				_mockSSDPClients.push(mockSSDPClient1);
 				_sut.on("lost", foundFunction);
-				_sut.search();
+				_sut.listen();
 
 				var messageReceivedArgs = mockSSDPClient1.on.calls.allArgs().filter(function (args) { return args[0] === "messageReceived"; })[0];
 
@@ -131,7 +131,7 @@ describe("PassiveSearcher", function () {
 
 				_mockSSDPClients.push(mockSSDPClient1);
 				_sut.on("found", foundFunction);
-				_sut.search();
+				_sut.listen();
 
 				var messageReceivedArgs = mockSSDPClient1.on.calls.allArgs().filter(function (args) { return args[0] === "messageReceived"; })[0];
 

@@ -15,7 +15,7 @@ var _require = require('omniscience-utilities');
 var Eventable = _require.Eventable;
 
 var DeviceLocator = (function (_Eventable) {
-	function DeviceLocator(timer, fetch, activeSearcher, passiveSearcher) {
+	function DeviceLocator(timer, fetch, activeSearcher, passiveSearcher, xmlParser) {
 		_classCallCheck(this, DeviceLocator);
 
 		_get(Object.getPrototypeOf(DeviceLocator.prototype), 'constructor', this).call(this);
@@ -23,6 +23,7 @@ var DeviceLocator = (function (_Eventable) {
 		this._fetch = fetch;
 		this._activeSearcher = activeSearcher;
 		this._passiveSearcher = passiveSearcher;
+		this._xmlParser = xmlParser;
 
 		this.debounceTimeout = 15000;
 		this._deviceTimeouts = {};
@@ -34,17 +35,37 @@ var DeviceLocator = (function (_Eventable) {
 	_inherits(DeviceLocator, _Eventable);
 
 	_createClass(DeviceLocator, [{
-		key: 'search',
-		value: function search(devices) {
+		key: '_initializeSearchers',
+		value: function _initializeSearchers() {
 			var _this = this;
 
+			this._activeSearcher.on('found', function (headers, ignoreDebounce) {
+				return _this._deviceFound(headers, ignoreDebounce);
+			});
+			this._passiveSearcher.on('found', function (headers, ignoreDebounce) {
+				return _this._deviceFound(headers, ignoreDebounce);
+			});
+			this._passiveSearcher.on('lost', function (headers) {
+				return _this.emit('deviceLost', headers.usn.split('::')[0]);
+			});
+			this._passiveSearcher.listen();
+
+			this._isInitialized = true;
+		}
+	}, {
+		key: 'search',
+		value: function search(devices) {
+			var _this2 = this;
+
 			if (!this._isInitialized) this._initializeSearchers();
-			if (Array.isArray(devices)) devices.forEach(function (device) {
-				return _this._checkForLostDevice(device);
+
+			devices.forEach(function (device) {
+				_this2._checkForLostDevice(device.ssdpDescription, device.id, false).then(function (found) {
+					if (!found) _this2.emit('deviceLost', device.id);
+				});
 			});
 
 			this._activeSearcher.search();
-			this._passiveSearcher.search();
 		}
 	}, {
 		key: 'stop',
@@ -53,45 +74,24 @@ var DeviceLocator = (function (_Eventable) {
 			this._passiveSearcher.stop();
 		}
 	}, {
-		key: '_initializeSearchers',
-		value: function _initializeSearchers() {
-			var _this2 = this;
-
-			this._activeSearcher.on('found', function (headers, ignoreDebounce) {
-				return _this2._deviceFound(headers, ignoreDebounce);
-			});
-
-			this._passiveSearcher.on('found', function (headers, ignoreDebounce) {
-				return _this2._deviceFound(headers, ignoreDebounce);
-			});
-			this._passiveSearcher.on('lost', function (headers) {
-				return _this2.emit('deviceLost', headers.usn.split('::')[0]);
-			});
-
-			this._isInitialized = true;
-		}
-	}, {
 		key: '_deviceFound',
 		value: function _deviceFound(headers, ignoreDebounce) {
 			var _this3 = this;
 
 			var id = Constants.uuidRegex.exec(headers.usn)[1];
 
-			this._timer.clearTimeout(this._deviceTimeouts[id]);
-			if (headers.hasOwnProperty('cache-control')) {
-				var waitTime = headers['cache-control'].split('=')[1] * 1000;
-				this._deviceTimeouts[id] = this._timer.setTimeout(function () {
-					_this3._fetch(headers.location, { method: 'head' }).then(function () {
-						return _this3._deviceFound(headers, true);
-					}, function () {
-						return _this3.emit('deviceLost', id);
-					});
-					//todo: looks like some devices don't support the head request and return a 501 not implemented.
-					//I am not entirely sure this is what is happening as I just get a 501 not implemented but this is my best guess as the page it was coming from does exist
-					//below is the exact error message I get in the log
-					//HEAD XHR http://192.168.1.1:54080/rootDesc.xml [HTTP/1.1 501 Not Implemented 24ms]
-				}, waitTime);
-			}
+			if (this._deviceTimeouts.hasOwnProperty(id)) this._timer.clearTimeout(this._deviceTimeouts[id]);
+
+			var waitTimeInSeconds = Constants.defaultDeviceTimeoutInSeconds;
+
+			if (headers.hasOwnProperty('cache-control')) waitTimeInSeconds = headers['cache-control'].split('=')[1];
+
+			this._deviceTimeouts[id] = this._timer.setTimeout(function () {
+				_this3._checkForLostDevice(headers.location, id, true).then(function (found) {
+					if (!found) _this3.emit('deviceLost', id);else _this3.emit('deviceFound', id, headers.location, headers.fromAddress, headers.serverIP);
+				});
+			}, waitTimeInSeconds * 1000);
+
 			var lastResponse = this._deviceLastResponses[id];
 			var currentTime = Date.now();
 			if (lastResponse && lastResponse + this.debounceTimeout < currentTime || ignoreDebounce || !lastResponse) {
@@ -101,13 +101,22 @@ var DeviceLocator = (function (_Eventable) {
 		}
 	}, {
 		key: '_checkForLostDevice',
-		value: function _checkForLostDevice(device) {
+		value: function _checkForLostDevice(location, id) {
 			var _this4 = this;
 
-			this._fetch(device.ssdpDescription, { method: 'head' }).then(function (response) {}, function (response) {
-				/*pinging device errored out, consider lost.*/
-				_this4.emit('deviceLost', device.id);
-			});
+			return this._fetch(location).then(function (response) {
+				if (!response.ok) return false;else {
+					var responseXml = _this4._xmlParser.parseFromString(response._bodyText);
+					var deviceIdElements = _this4._xmlParser.getElements(responseXml, 'UDN');
+					return deviceIdElements.some(function (deviceIdElement) {
+						return id === deviceIdElement.innerHTML.replace('uuid:', '');
+					});
+					//check the xml to make sure what we got back has the same id as what we were looking for --my matchstick gets a new ip on each boot
+					//also make sure to check against all UDN elements as sub devices will have their own and we don't know what we are looking for
+				}
+			}, function (response) {
+				return false;
+			}); /*error occured while trying to ping device, consider lost.*/
 		}
 	}]);
 
@@ -115,4 +124,3 @@ var DeviceLocator = (function (_Eventable) {
 })(Eventable);
 
 module.exports = DeviceLocator;
-/*we heard back from device, do nothing.*/

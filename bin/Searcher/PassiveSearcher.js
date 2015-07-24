@@ -26,8 +26,8 @@ var PassiveSearcher = (function (_Eventable) {
 	_inherits(PassiveSearcher, _Eventable);
 
 	_createClass(PassiveSearcher, [{
-		key: 'search',
-		value: function search() {
+		key: 'listen',
+		value: function listen() {
 			if (!this._isInitialized) this._initializeSSDPClients();
 		}
 	}, {
