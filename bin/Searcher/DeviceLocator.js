@@ -61,7 +61,10 @@ var DeviceLocator = (function (_Eventable) {
 
 			devices.forEach(function (device) {
 				_this2._checkForLostDevice(device.ssdpDescription, device.id, false).then(function (found) {
-					if (!found) _this2.emit('deviceLost', device.id);
+					if (!found) {
+						delete _this2._deviceLastResponses[device.id];
+						_this2.emit('deviceLost', device.id);
+					}
 				});
 			});
 
@@ -87,8 +90,13 @@ var DeviceLocator = (function (_Eventable) {
 			if (headers.hasOwnProperty('cache-control')) waitTimeInSeconds = headers['cache-control'].split('=')[1];
 
 			this._deviceTimeouts[id] = this._timer.setTimeout(function () {
-				_this3._checkForLostDevice(headers.location, id, true).then(function (found) {
-					if (!found) _this3.emit('deviceLost', id);else _this3.emit('deviceFound', id, headers.location, headers.fromAddress, headers.serverIP);
+				_this3._checkForLostDevice(headers.location, id).then(function (found) {
+					if (!found) {
+						delete _this3._deviceLastResponses[id];
+						_this3.emit('deviceLost', id);
+					} else {
+						_this3._deviceFound(headers, true);
+					}
 				});
 			}, waitTimeInSeconds * 1000);
 
@@ -114,7 +122,7 @@ var DeviceLocator = (function (_Eventable) {
 					//check the xml to make sure what we got back has the same id as what we were looking for --my matchstick gets a new ip on each boot
 					//also make sure to check against all UDN elements as sub devices will have their own and we don't know what we are looking for
 				}
-			}, function (response) {
+			}, function (err) {
 				return false;
 			}); /*error occured while trying to ping device, consider lost.*/
 		}

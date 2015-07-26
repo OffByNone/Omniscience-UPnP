@@ -382,7 +382,7 @@ describe("DeviceLocator", function () {
 
 				callback();
 				
-				expect(_sut._checkForLostDevice).toHaveBeenCalledWith(location, deviceId, true);
+				expect(_sut._checkForLostDevice).toHaveBeenCalledWith(location, deviceId);
 				expect(thenableResult).toHaveBeenCalledWith(jasmine.any(Function));
 				thenableResult.calls.argsFor(0)[0](true);
 
@@ -421,7 +421,7 @@ describe("DeviceLocator", function () {
 
 				callback();
 				
-				expect(_sut._checkForLostDevice).toHaveBeenCalledWith(location, deviceId, true);
+				expect(_sut._checkForLostDevice).toHaveBeenCalledWith(location, deviceId);
 				expect(thenableResult).toHaveBeenCalledWith(jasmine.any(Function));
 				thenableResult.calls.argsFor(0)[0](false);
 
