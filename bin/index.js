@@ -44,7 +44,7 @@ var UPnP = (function () {
 			var _this = this;
 
 			return this.createDeviceLocator().then(function (deviceLocator) {
-				return new DeviceService(new DeviceFactory(new XmlParser(_this._sdk.createDomParser()), _this._utilities.createUrlProvider(), _this._utilities.MD5(), new UPnPServiceFactory(_this._utilities.fetch(), new XmlParser(_this._sdk.createDomParser()), _this._utilities.createUrlProvider(), UPnPExtensionInfoFactory, new ServicePropertyFactory(new XmlParser(_this._sdk.createDomParser())), new ServiceMethodFactory(new XmlParser(_this._sdk.createDomParser())), ServiceExecutor, new ExecutableServiceMethodFactory(new XmlParser(_this._sdk.createDomParser()), new SOAPService(_this._utilities.fetch(), new XmlParser(_this._sdk.createDomParser()), StringUtils), ParameterValidator)), UPnPExtensionInfoFactory), deviceLocator, _this._sdk.storage(), _this._sdk.notifications(), _this._utilities.fetch(), _this._utilities.MD5());
+				return new DeviceService(new DeviceFactory(new XmlParser(_this._sdk.createDomParser()), _this._utilities.createUrlProvider(), _this._utilities.MD5(), new UPnPServiceFactory(_this._utilities.fetch(), new XmlParser(_this._sdk.createDomParser()), _this._utilities.createUrlProvider(), UPnPExtensionInfoFactory, new ServicePropertyFactory(new XmlParser(_this._sdk.createDomParser())), new ServiceMethodFactory(new XmlParser(_this._sdk.createDomParser())), ServiceExecutor, new ExecutableServiceMethodFactory(new XmlParser(_this._sdk.createDomParser()), new SOAPService(_this._utilities.fetch(), new XmlParser(_this._sdk.createDomParser()), StringUtils), ParameterValidator)), UPnPExtensionInfoFactory), deviceLocator, _this._sdk.createStorageService(), _this._sdk.notifications(), _this._utilities.fetch(), _this._utilities.MD5());
 			});
 		}
 	}, {
@@ -72,8 +72,14 @@ var UPnP = (function () {
 			var _this3 = this;
 
 			return ipAddresses.map(function (ipAddress) {
-				var ssdpClient = new SSDPClient(StringUtils, _this3._sdk.udp.createUDPSocket(sourcePort));
-				ssdpClient.setMulticastInterface(ipAddress);
+				try {
+					var socket = _this3._sdk.createUDPSocket();
+					socket.init(sourcePort);
+					var ssdpClient = new SSDPClient(StringUtils, socket);
+					ssdpClient.setMulticastInterface(ipAddress);
+					return ssdpClient;
+				} catch (error) {}
+			}).filter(function (ssdpClient) {
 				return ssdpClient;
 			});
 		}

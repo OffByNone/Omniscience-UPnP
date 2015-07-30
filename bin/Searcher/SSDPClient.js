@@ -2,7 +2,7 @@
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -28,7 +28,18 @@ var SSDPClient = (function (_Eventable) {
 	_createClass(SSDPClient, [{
 		key: 'startListening',
 		value: function startListening() {
-			this._socket.asyncListen(this);
+			var _this = this;
+
+			this._socket.onStopListeningEvent(function (status) {
+				return _this.emit('close', status);
+			});
+			this._socket.onPacketReceivedEvent(function (message) {
+				var headers = _this._parseHeaders(message.data);
+				headers.fromAddress = message.fromAddr.address + ':' + message.fromAddr.port;
+				headers.serverIP = _this._ipAddress;
+				_this.emit('messageReceived', headers);
+			});
+			this._socket.listen();
 		}
 	}, {
 		key: 'search',
@@ -37,7 +48,7 @@ var SSDPClient = (function (_Eventable) {
 			var message = new Uint8Array([].map.call(searchText, function (i) {
 				return i.charCodeAt(0);
 			}));
-			this._socket.send(Constants.MulticastIP, Constants.MulticastPort, message, message.length);
+			this._socket.send(Constants.MulticastIP, Constants.MulticastPort, message);
 		}
 	}, {
 		key: 'stop',
@@ -48,7 +59,7 @@ var SSDPClient = (function (_Eventable) {
 		key: 'setMulticastInterface',
 		value: function setMulticastInterface(ipAddress) {
 			this._ipAddress = ipAddress;
-			this._socket.multicastInterface = ipAddress;
+			this._socket.bind(ipAddress);
 		}
 	}, {
 		key: 'joinMulticast',
@@ -59,21 +70,6 @@ var SSDPClient = (function (_Eventable) {
 		key: 'leaveMulticast',
 		value: function leaveMulticast() {
 			this._socket.leaveMulticast(Constants.MulticastIP, this._ipAddress);
-		}
-	}, {
-		key: 'onStopListening',
-		value: function onStopListening(socket, status) {
-			// nsIUDPSocketListener
-			this.emit('close', status);
-		}
-	}, {
-		key: 'onPacketReceived',
-		value: function onPacketReceived(socket, message) {
-			// See: https://bugzilla.mozilla.org/show_bug.cgi?id=952927
-			var headers = this._parseHeaders(message.data);
-			headers.fromAddress = message.fromAddr.address + ':' + message.fromAddr.port;
-			headers.serverIP = this._ipAddress;
-			this.emit('messageReceived', headers);
 		}
 	}, {
 		key: '_parseHeaders',
