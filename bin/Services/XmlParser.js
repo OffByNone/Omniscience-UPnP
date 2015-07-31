@@ -47,6 +47,5 @@ var XmlParser = (function () {
 	return XmlParser;
 })();
 
-module.exports = XmlParser;
-
 //todo: make this into a singleton
+module.exports = XmlParser;

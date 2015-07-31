@@ -78,7 +78,9 @@ var UPnP = (function () {
 					var ssdpClient = new SSDPClient(StringUtils, socket);
 					ssdpClient.setMulticastInterface(ipAddress);
 					return ssdpClient;
-				} catch (error) {}
+				} catch (error) {
+					console.log(error);
+				}
 			}).filter(function (ssdpClient) {
 				return ssdpClient;
 			});

@@ -1,0 +1,19 @@
+{
+	"name": "Omniscience UPnP",
+	"description": "Omniscience UPnP Chrome Test App.",
+	"version": "0.5.0",
+	"manifest_version": 2,
+	"app": {
+		"background": { "scripts": [ "./Chrome_Background.js" ] }
+	},
+	"sockets": {
+		"tcpServer": { "listen": [ "*" ] },
+		"tcp": { "connect": "*" },
+		"udp": {
+			"bind": "*",
+			"send": "*",
+			"multicastMembership": ""
+		}
+	},
+	"icons": { "64": "./data/logo_64.png" }
+}
