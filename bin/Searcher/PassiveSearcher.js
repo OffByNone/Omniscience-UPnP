@@ -43,7 +43,7 @@ var PassiveSearcher = (function (_Eventable) {
 			var _this = this;
 
 			this._ssdpClients.forEach(function (ssdpClient) {
-				ssdpClient.startListening();
+				ssdpClient.initialize();
 				ssdpClient.on('error', function (error) {
 					return _this._error(error);
 				});

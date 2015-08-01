@@ -22,28 +22,27 @@ var SSDPClient = (function (_Eventable) {
 
 		_get(Object.getPrototypeOf(SSDPClient.prototype), 'constructor', this).call(this);
 		this._socket = udpSocket;
-		this._ipAddress = udpSocket._localIP;
+		this._ipAddress = udpSocket.localIP;
 		this._stringUtils = stringUtils;
 	}
 
 	_inherits(SSDPClient, _Eventable);
 
 	_createClass(SSDPClient, [{
-		key: 'startListening',
-		value: function startListening() {
+		key: 'initialize',
+		value: function initialize() {
 			var _this = this;
 
 			this._socket.onStopListeningEvent(function (status) {
 				return _this.emit('close', status);
 			});
 			this._socket.onPacketReceivedEvent(function (message) {
-				var messageData = _this._toString(message.data);
+				var messageData = typeof message.data === 'string' ? message.data : _this._toString(message.data);
 				var headers = _this._parseHeaders(messageData);
 				headers.fromAddress = message.fromAddr.address + ':' + message.fromAddr.port;
 				headers.serverIP = _this._ipAddress;
 				_this.emit('messageReceived', headers);
 			});
-			this._socket.listen();
 		}
 	}, {
 		key: 'search',
