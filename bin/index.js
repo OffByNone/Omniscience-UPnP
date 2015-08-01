@@ -74,9 +74,8 @@ var UPnP = (function () {
 			return ipAddresses.map(function (ipAddress) {
 				try {
 					var socket = _this3._sdk.createUDPSocket();
-					socket.init(sourcePort);
+					socket.init(sourcePort, ipAddress, Constants.MulticastIP);
 					var ssdpClient = new SSDPClient(StringUtils, socket);
-					ssdpClient.setMulticastInterface(ipAddress);
 					return ssdpClient;
 				} catch (error) {
 					console.log(error);

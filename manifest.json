@@ -6,6 +6,11 @@
 	"app": {
 		"background": { "scripts": [ "./Chrome_Background.js" ] }
 	},
+	"permissions":[
+		"http://*/",
+		"notifications",
+		"storage"
+	],
 	"sockets": {
 		"tcpServer": { "listen": [ "*" ] },
 		"tcp": { "connect": "*" },

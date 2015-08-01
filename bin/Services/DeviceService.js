@@ -73,7 +73,9 @@ var DeviceService = (function (_Eventable) {
 							try {
 								_this2._deviceFactory.create(device, deviceXml, location, fromAddress, serverIP);
 								_this2._addDevice(device);
-							} catch (err) {}
+							} catch (err) {
+								console.log(err);
+							}
 							//todo: either root node or device node were missing.  probably log a warning/error to the console.
 						}
 					});
@@ -109,7 +111,7 @@ var DeviceService = (function (_Eventable) {
 				this._notifications.notify({
 					title: 'Found ' + device.name,
 					text: 'a ' + device.model.name + ' by ' + device.manufacturer.name,
-					iconURL: device.icons.length > 0 && device.icons[0].url ? device.icons[0].url.href : Constants.defaultIcon
+					iconURL: /*device.icons.length > 0 && device.icons[0].url ? device.icons[0].url.href :*/Constants.defaultIcon
 				});
 			}
 			this._saveDeviceList();
