@@ -4,7 +4,7 @@
 	"description": "Omniscience Module for finding and creating UPnP devices.",
 	"main": "./bin/index.js",
 	"author": "OffByNone",
-	"license": "GNU GPL 3.0",
+	"license": "GNU GPL v3",
 	"homepage": "https://github.com/offbynone/omniscience-upnp",
 	"bugs": {
 		"url": "https://github.com/offbynone/omniscience-upnp/issues"
@@ -22,8 +22,8 @@
 		"url": "git://github.com/offbynone/omniscience-upnp.git"
 	},
 	"devDependencies": {
-		"babel": "^5.6.14",
-		"eslint": "^0.24.0",
+		"babel": "^5.8.20",
+		"eslint": "^1.0.0",
 		"jasmine": "^2.3.1"
 	},
 	"dependencies": {
