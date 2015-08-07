@@ -27,7 +27,7 @@
 		"jasmine": "^2.3.1"
 	},
 	"dependencies": {
-		"omniscience-sdk-resolver": "offbynone/omniscience-sdk-resolver#chrome-port",
+		"omniscience-sdk-resolver": "offbynone/omniscience-sdk-resolver",
 		"omniscience-utilities": "offbynone/omniscience-utilities"
 	}
 }
