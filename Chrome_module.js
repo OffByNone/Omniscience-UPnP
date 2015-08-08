@@ -1,16 +1,8 @@
 (function () {
 	"use strict";
 
-	var autorequire;
+	var autorequire = "./Chrome_Background.js";
 	var moduledir;
-	var scripts = document.getElementsByTagName('script');
-	for (var i = 0, l = scripts.length; i < l; i++) {
-		if (scripts[i].src.match(/module\.js$/)) {
-			autorequire = scripts[i].getAttribute('autorequire');
-			moduledir = scripts[i].getAttribute('moduledir');
-			break;
-		}
-	}
 
 	var require = window.require = makeRequire("/");
 	require.resolve = resolve;

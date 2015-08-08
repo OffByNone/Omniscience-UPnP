@@ -4,16 +4,20 @@
 	"version": "0.5.0",
 	"manifest_version": 2,
 	"app": {
-		"background": { "scripts": [ "./Chrome_Background.js" ] }
+		"background": {
+			"scripts": [
+				"./Chrome_module.js"
+			]
+		}
 	},
-	"permissions":[
+	"permissions": [
 		"http://*/",
 		"notifications",
 		"storage"
 	],
 	"sockets": {
 		"tcpServer": { "listen": [ "*" ] },
-		"tcp": { "connect": "*" },
+		"tcp": { "connect": "*"	},
 		"udp": {
 			"bind": "*",
 			"send": "*",

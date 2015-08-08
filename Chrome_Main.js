@@ -1,9 +1,5 @@
-	var CompositionRoot = require("./bin/index");
-	var compositionRoot = new CompositionRoot();
+/* global chrome */
 
-	compositionRoot.createDeviceService().then((deviceService) => {
-		console.log("deviceService created");
-		deviceService.on("deviceFound", function (device) { console.log(device); });
-		deviceService.search();
-		window.setTimeout(function () {deviceService.search() }, 1000);
-	});
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+	console.log(request);
+});
