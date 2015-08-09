@@ -3,7 +3,7 @@
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -31,7 +31,10 @@ var DeviceService = (function (_Eventable) {
 		this._isInitialized = false;
 
 		this.devices = [];
-		//todo: this._storageService.get('devices') || [];
+		/* todo: this is now a race condition full of problems
+   * what if we execute a search before we resolve the promise?
+   */
+		this._storageService.get('devices').then(function (devices) {});
 	}
 
 	_inherits(DeviceService, _Eventable);
@@ -66,8 +69,9 @@ var DeviceService = (function (_Eventable) {
 						})[0];
 
 						if (!device || deviceResponseHash !== device.responseHash && device.fromAddress === fromAddress) {
-							//for devices that show up on multiple network interfaces, their response hashes will be different, and their fromAddresses will also be different
-							//don't rebuild if it is simply the same device on a different network interface
+							/* for devices that show up on multiple network interfaces, their response hashes will be different, and their fromAddresses will also be different
+        * don't rebuild if it is simply the same device on a different network interface
+        */
 							device = device || new Device();
 
 							try {
@@ -76,7 +80,7 @@ var DeviceService = (function (_Eventable) {
 							} catch (err) {
 								console.log(err);
 							}
-							//todo: either root node or device node were missing.  probably log a warning/error to the console.
+							/*todo: either root node or device node were missing.  probably log a warning/error to the console.*/
 						}
 					});
 				});
@@ -111,7 +115,7 @@ var DeviceService = (function (_Eventable) {
 				this._notifications.notify({
 					title: 'Found ' + device.name,
 					text: 'a ' + device.model.name + ' by ' + device.manufacturer.name,
-					iconURL: device.icons.length > 0 && device.icons[0].url ? device.icons[0].url.href : Constants.defaultIcon
+					iconURL: /*device.icons.length > 0 && device.icons[0].url ? device.icons[0].url.href :*/Constants.defaultIcon
 				});
 			}
 			this._saveDeviceList();
@@ -128,3 +132,5 @@ var DeviceService = (function (_Eventable) {
 })(Eventable);
 
 module.exports = DeviceService;
+
+/*this.devices = devices || [];*/
