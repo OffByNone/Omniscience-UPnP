@@ -2,7 +2,7 @@
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -15,7 +15,7 @@ var _require = require('omniscience-utilities');
 var Eventable = _require.Eventable;
 
 var DeviceLocator = (function (_Eventable) {
-	function DeviceLocator(timer, fetch, activeSearcher, passiveSearcher, xmlParser) {
+	function DeviceLocator(timer, fetch, activeSearcher, passiveSearcher, xmlParser, simpleTCP) {
 		_classCallCheck(this, DeviceLocator);
 
 		_get(Object.getPrototypeOf(DeviceLocator.prototype), 'constructor', this).call(this);
@@ -24,6 +24,7 @@ var DeviceLocator = (function (_Eventable) {
 		this._activeSearcher = activeSearcher;
 		this._passiveSearcher = passiveSearcher;
 		this._xmlParser = xmlParser;
+		this._simpleTCP = simpleTCP;
 
 		this.debounceTimeout = 15000;
 		this._deviceTimeouts = {};
@@ -112,19 +113,23 @@ var DeviceLocator = (function (_Eventable) {
 		value: function _checkForLostDevice(location, id) {
 			var _this4 = this;
 
-			return this._fetch(location).then(function (response) {
-				if (!response.ok) return false;else {
-					var responseXml = _this4._xmlParser.parseFromString(response._bodyText);
-					var deviceIdElements = _this4._xmlParser.getElements(responseXml, 'UDN');
-					return deviceIdElements.some(function (deviceIdElement) {
-						return id === deviceIdElement.innerHTML.replace('uuid:', '');
-					});
-					//check the xml to make sure what we got back has the same id as what we were looking for --my matchstick gets a new ip on each boot
-					//also make sure to check against all UDN elements as sub devices will have their own and we don't know what we are looking for
-				}
-			}, function (err) {
-				return false;
-			}); /*error occured while trying to ping device, consider lost.*/
+			return this._simpleTCP.ping(location.hostname, location.port).then(function (deviceFound) {
+				if (!deviceFound) return false;
+
+				return _this4._fetch(location).then(function (response) {
+					if (!response.ok) return false;else {
+						var responseXml = _this4._xmlParser.parseFromString(response._bodyText);
+						var deviceIdElements = _this4._xmlParser.getElements(responseXml, 'UDN');
+						return deviceIdElements.some(function (deviceIdElement) {
+							return id === deviceIdElement.innerHTML.replace('uuid:', '');
+						});
+						//check the xml to make sure what we got back has the same id as what we were looking for --my matchstick gets a new ip on each boot
+						//also make sure to check against all UDN elements as sub devices will have their own and we don't know what we are looking for
+					}
+				}, function (err) {
+					return false;
+				}); /*error occured while trying to ping device, consider lost.*/
+			});
 		}
 	}]);
 
