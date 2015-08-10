@@ -62,7 +62,7 @@ var UPnP = (function () {
 		value: function createDeviceLocator() {
 			var _this2 = this;
 
-			return this._sdk.IPResolver.resolveIPs().then(function (ipAddresses) {
+			return this._sdk.createIPResolver().resolveIPs().then(function (ipAddresses) {
 				return new DeviceLocator(_this2._sdk.timers(), _this2._utilities.fetch(), new ActiveSearcher(_this2.createSSDPClients(ipAddresses)), new PassiveSearcher(_this2.createSSDPClients(ipAddresses, Constants.MulticastPort)), new XmlParser(_this2._sdk.createDomParser()), _this2._sdk.createSimpleTCP());
 			});
 		}
