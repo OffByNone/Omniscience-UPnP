@@ -6,7 +6,7 @@ module.exports = {
 		id: "upnp-org"
 	},
 	defaultDeviceTimeoutInSeconds: 900,
-	defaultIcon: "./icons/logo_64.png",
+	defaultIcon: "./data/icons/logo_64.png",
 	MatchStickMacAddresses: ["98-3B-16", "02-1A-11"],
 	ChromecastMacAddresses: [],
 	FireTVStickMacAddresses: [],
