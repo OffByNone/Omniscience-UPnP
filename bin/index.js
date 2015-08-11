@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -28,7 +28,7 @@ var _require = require('omniscience-utilities');
 
 var Utilities = _require.Utilities;
 
-var SdkResolver = require('omniscience-sdk-resolver');
+var SdkResolver = require("omniscience-sdk-resolver");
 
 var UPnP = (function () {
 	function UPnP() {
@@ -63,7 +63,7 @@ var UPnP = (function () {
 			var _this2 = this;
 
 			return this._sdk.createIPResolver().resolveIPs().then(function (ipAddresses) {
-				return new DeviceLocator(_this2._sdk.timers(), _this2._utilities.fetch(), new ActiveSearcher(_this2.createSSDPClients(ipAddresses)), new PassiveSearcher(_this2.createSSDPClients(ipAddresses, Constants.MulticastPort)), new XmlParser(_this2._sdk.createDomParser()), _this2._sdk.createSimpleTCP());
+				return new DeviceLocator(_this2._sdk.timers(), _this2._utilities.fetch(), new ActiveSearcher(_this2.createSSDPClients(ipAddresses)), new PassiveSearcher(_this2.createSSDPClients(ipAddresses, Constants.MulticastPort)), new XmlParser(_this2._sdk.createDomParser()), _this2._sdk.createSimpleTCP(), _this2._utilities.createUrlProvider());
 			});
 		}
 	}, {
