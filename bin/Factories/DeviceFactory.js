@@ -11,7 +11,7 @@ var DeviceModel = require('../Entities/DeviceModel');
 var Icon = require('../Entities/Icon');
 
 var DeviceFactory = (function () {
-	function DeviceFactory(xmlParser, urlProvider, md5, upnpServiceFactory, upnpExtensionInfoFactory, xhr, btoa) {
+	function DeviceFactory(xmlParser, urlProvider, md5, upnpServiceFactory, upnpExtensionInfoFactory, xhr, base64Utils) {
 		_classCallCheck(this, DeviceFactory);
 
 		this._xmlParser = xmlParser;
@@ -20,7 +20,7 @@ var DeviceFactory = (function () {
 		this._upnpServiceFactory = upnpServiceFactory;
 		this._upnpExtensionInfoFactory = upnpExtensionInfoFactory;
 		this._xhr = xhr;
-		this._btoa = btoa;
+		this._base64Utils = base64Utils;
 	}
 
 	_createClass(DeviceFactory, [{
@@ -139,7 +139,7 @@ var DeviceFactory = (function () {
 						while (i--) {
 							binaryString[i] = String.fromCharCode(uInt8Array[i]);
 						}
-						var base64 = _this3._btoa(binaryString.join(''));
+						var base64 = _this3._base64Utils.encode(binaryString.join(''));
 						resolve('data:' + mimeType + ';base64,' + base64);
 					} else {
 						reject();
