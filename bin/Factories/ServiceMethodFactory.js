@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -20,13 +20,13 @@ var ServiceMethodFactory = (function () {
             var _this = this;
 
             var method = new ServiceMethod();
-            method.name = this._xmlParser.getText(methodXml, "name");
+            method.name = this._xmlParser.getText(methodXml, 'name');
 
-            var args = this._xmlParser.getElements(methodXml, "argument").map(function (argumentXml) {
+            var args = this._xmlParser.getElements(methodXml, 'argument').map(function (argumentXml) {
                 return {
-                    name: _this._xmlParser.getText(argumentXml, "name"),
-                    direction: _this._xmlParser.getText(argumentXml, "direction"),
-                    relatedStateVariable: _this._xmlParser.getText(argumentXml, "relatedStateVariable")
+                    name: _this._xmlParser.getText(argumentXml, 'name'),
+                    direction: _this._xmlParser.getText(argumentXml, 'direction'),
+                    relatedStateVariable: _this._xmlParser.getText(argumentXml, 'relatedStateVariable')
                 };
             });
             args.forEach(function (argument) {

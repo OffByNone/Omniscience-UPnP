@@ -1,11 +1,11 @@
 "use strict";
-/* global Promise */
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Constants = require('../Constants');
+/* global Promise */
+var Constants = require("../Constants");
 
 var SubscriptionService = (function () {
 	function SubscriptionService(fetch) {
@@ -37,10 +37,10 @@ var SubscriptionService = (function () {
 				};
 			}
 			return this._fetch(subscriptionUrl, {
-				method: 'SUBSCRIBE',
+				method: "SUBSCRIBE",
 				headers: headers
 			}).then(function (response) {
-				subscriptionId = (response.headers.get('sid') || "").replace("uuid:", "");
+				subscriptionId = (response.headers.get("sid") || "").replace("uuid:", "");
 				if (!response.ok) {
 					//handle 405 method not allowed
 					if (response.status == Constants.PreconditionFailed) {
@@ -63,7 +63,7 @@ var SubscriptionService = (function () {
 			if (!subscriptionUrl) return Promise.reject("Argument 'subscriptionUrl' cannot be null.");
 			if (!subscriptionId) return Promise.reject("Argument 'subscriptionId' cannot be null.");
 
-			return this._fetch(subscriptionUrl, { method: 'UNSUBSCRIBE', headers: { SID: subscriptionId } });
+			return this._fetch(subscriptionUrl, { method: "UNSUBSCRIBE", headers: { SID: subscriptionId } });
 		}
 	}]);
 
