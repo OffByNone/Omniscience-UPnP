@@ -17,7 +17,7 @@ var Eventable = _require.Eventable;
 var DeviceLocator = (function (_Eventable) {
 	_inherits(DeviceLocator, _Eventable);
 
-	function DeviceLocator(timer, fetch, activeSearcher, passiveSearcher, xmlParser, simpleTCP) {
+	function DeviceLocator(timer, fetch, activeSearcher, passiveSearcher, xmlParser, simpleTCP, urlProvider) {
 		_classCallCheck(this, DeviceLocator);
 
 		_get(Object.getPrototypeOf(DeviceLocator.prototype), 'constructor', this).call(this);
@@ -27,6 +27,7 @@ var DeviceLocator = (function (_Eventable) {
 		this._passiveSearcher = passiveSearcher;
 		this._xmlParser = xmlParser;
 		this._simpleTCP = simpleTCP;
+		this._urlProvider = urlProvider;
 
 		this.debounceTimeout = 15000;
 		this._deviceTimeouts = {};
@@ -91,7 +92,7 @@ var DeviceLocator = (function (_Eventable) {
 			if (headers.hasOwnProperty("cache-control")) waitTimeInSeconds = headers["cache-control"].split("=")[1];
 
 			this._deviceTimeouts[id] = this._timer.setTimeout(function () {
-				_this3._checkForLostDevice(headers.location, id).then(function (found) {
+				_this3._checkForLostDevice(_this3._urlProvider.toUrl(headers.location), id).then(function (found) {
 					if (!found) {
 						delete _this3._deviceLastResponses[id];
 						_this3.emit("deviceLost", id);
