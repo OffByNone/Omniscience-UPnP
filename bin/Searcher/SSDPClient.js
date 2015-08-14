@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -8,7 +8,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Constants = require('../Constants');
 
@@ -17,6 +17,8 @@ var _require = require('omniscience-utilities');
 var Eventable = _require.Eventable;
 
 var SSDPClient = (function (_Eventable) {
+	_inherits(SSDPClient, _Eventable);
+
 	function SSDPClient(stringUtils, udpSocket) {
 		_classCallCheck(this, SSDPClient);
 
@@ -26,7 +28,10 @@ var SSDPClient = (function (_Eventable) {
 		this._stringUtils = stringUtils;
 	}
 
-	_inherits(SSDPClient, _Eventable);
+	/**
+  * Simple Service Discovery Protocol
+  * DLNA, and DIAL are built on top of this
+  */
 
 	_createClass(SSDPClient, [{
 		key: 'initialize',
@@ -37,9 +42,9 @@ var SSDPClient = (function (_Eventable) {
 				return _this.emit('close', status);
 			});
 			this._socket.onPacketReceivedEvent(function (message) {
-				var messageData = typeof message.data === 'string' ? message.data : _this._toString(message.data);
+				var messageData = typeof message.data === "string" ? message.data : _this._toString(message.data);
 				var headers = _this._parseHeaders(messageData);
-				headers.fromAddress = message.fromAddr.address + ':' + message.fromAddr.port;
+				headers.fromAddress = message.fromAddr.address + ":" + message.fromAddr.port;
 				headers.serverIP = _this._ipAddress;
 				_this.emit('messageReceived', headers);
 			});
@@ -63,9 +68,9 @@ var SSDPClient = (function (_Eventable) {
 		value: function _parseHeaders(headerString) {
 			//todo: move this to another file, it doesnt belong here
 			var headers = {};
-			headerString.split('\r\n').forEach(function (x) {
-				if (!x || x.indexOf(':') === -1) return;
-				var colon = x.indexOf(':');
+			headerString.split("\r\n").forEach(function (x) {
+				if (!x || x.indexOf(":") === -1) return;
+				var colon = x.indexOf(":");
 				headers[x.substring(0, colon).toLowerCase()] = x.substring(colon + 1).trim();
 			});
 			return headers;
@@ -86,8 +91,4 @@ var SSDPClient = (function (_Eventable) {
 	return SSDPClient;
 })(Eventable);
 
-/**
- * Simple Service Discovery Protocol
- * DLNA, and DIAL are built on top of this
- */
 module.exports = SSDPClient;
