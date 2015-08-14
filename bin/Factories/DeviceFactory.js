@@ -132,14 +132,14 @@ var DeviceFactory = (function () {
 				xhr.open('GET', url, true);
 				xhr.responseType = 'arraybuffer';
 				xhr.onload = function (e) {
-					if (this.status == 200) {
-						var uInt8Array = new Uint8Array(this.response);
+					if (e.target.status == 200) {
+						var uInt8Array = new Uint8Array(e.target.response);
 						var i = uInt8Array.length;
 						var binaryString = new Array(i);
 						while (i--) {
 							binaryString[i] = String.fromCharCode(uInt8Array[i]);
 						}
-						var base64 = this._btoa(binaryString.join(''));
+						var base64 = _this3._btoa(binaryString.join(''));
 						resolve('data:' + mimeType + ';base64,' + base64);
 					} else {
 						reject();
