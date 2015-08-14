@@ -1,5 +1,5 @@
 /* global Promise */
-'use strict';
+"use strict";
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -7,7 +7,7 @@ var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_ag
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Constants = require('../Constants');
 
@@ -18,6 +18,8 @@ var Eventable = _require.Eventable;
 var Device = require('../Entities/Device');
 
 var DeviceService = (function (_Eventable) {
+	_inherits(DeviceService, _Eventable);
+
 	function DeviceService(deviceFactory, deviceLocator, storageService, notifications, fetch, md5) {
 		_classCallCheck(this, DeviceService);
 
@@ -34,10 +36,10 @@ var DeviceService = (function (_Eventable) {
 		/* todo: this is now a race condition full of problems
    * what if we execute a search before we resolve the promise?
    */
-		this._storageService.get('devices').then(function (devices) {});
+		this._storageService.get("devices").then(function (devices) {
+			/*this.devices = devices || [];*/
+		});
 	}
-
-	_inherits(DeviceService, _Eventable);
 
 	_createClass(DeviceService, [{
 		key: 'loadDevices',
@@ -59,8 +61,8 @@ var DeviceService = (function (_Eventable) {
 			var _this2 = this;
 
 			if (!this._isInitialized) {
-				this._deviceLocator.on('deviceFound', function (id, location, fromAddress, serverIP) {
-					if (location.toLowerCase().indexOf('http') !== 0) location = 'http://' + location; //Microsoft special
+				this._deviceLocator.on("deviceFound", function (id, location, fromAddress, serverIP) {
+					if (location.toLowerCase().indexOf("http") !== 0) location = "http://" + location; //Microsoft special
 					_this2._fetch(location).then(function (response) {
 						var deviceXml = response._bodyText;
 						var deviceResponseHash = _this2._md5(deviceXml);
@@ -75,8 +77,9 @@ var DeviceService = (function (_Eventable) {
 							device = device || new Device();
 
 							try {
-								_this2._deviceFactory.create(device, deviceXml, location, fromAddress, serverIP);
-								_this2._addDevice(device);
+								_this2._deviceFactory.create(device, deviceXml, location, fromAddress, serverIP).then(function () {
+									_this2._addDevice(device);
+								});
 							} catch (err) {
 								console.log(err);
 							}
@@ -84,7 +87,7 @@ var DeviceService = (function (_Eventable) {
 						}
 					});
 				});
-				this._deviceLocator.on('deviceLost', function (id) {
+				this._deviceLocator.on("deviceLost", function (id) {
 					return _this2._removeDevice(id);
 				});
 				this._isInitialized = true;
@@ -98,7 +101,7 @@ var DeviceService = (function (_Eventable) {
 			for (var i = 0; i < this.devices.length; i++) {
 				if (this.devices[i].id === id) {
 					var lostDevice = this.devices.splice(i, 1)[0];
-					this.emit('deviceLost', lostDevice);
+					this.emit("deviceLost", lostDevice);
 					this._saveDeviceList();
 					return;
 				}
@@ -114,8 +117,8 @@ var DeviceService = (function (_Eventable) {
 				this.devices.push(device);
 				this._notifications.notify({
 					title: 'Found ' + device.name,
-					text: 'a ' + device.model.name + ' by ' + device.manufacturer.name,
-					iconURL: /*device.icons.length > 0 && device.icons[0].url ? device.icons[0].url.href :*/Constants.defaultIcon
+					text: "a " + device.model.name + " by " + device.manufacturer.name,
+					iconURL: device.icons.length > 0 && device.icons[0].base64Image ? device.icons[0].base64Image : Constants.defaultIcon
 				});
 			}
 			this._saveDeviceList();
@@ -124,7 +127,7 @@ var DeviceService = (function (_Eventable) {
 	}, {
 		key: '_saveDeviceList',
 		value: function _saveDeviceList() {
-			this._storageService.set('devices', this.devices);
+			this._storageService.set("devices", this.devices);
 		}
 	}]);
 
@@ -132,5 +135,3 @@ var DeviceService = (function (_Eventable) {
 })(Eventable);
 
 module.exports = DeviceService;
-
-/*this.devices = devices || [];*/

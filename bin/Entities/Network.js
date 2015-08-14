@@ -12,6 +12,10 @@ var Network = (function () {
         this.name = null;
     }
 
+    /**
+     * WiFi network
+     */
+
     _createClass(Network, [{
         key: "isSecure",
         value: function isSecure() {
@@ -22,7 +26,4 @@ var Network = (function () {
     return Network;
 })();
 
-/**
- * WiFi network
- */
 module.exports = Network;
