@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 var UPnPExtensionInfo = require('../Entities/UPnPExtensionInfo');
 var Constants = require('../Constants');
 
@@ -10,10 +10,10 @@ module.exports = {
                 service type 		urn:schemas-upnp-org:service:[serviceType]:[version]	urn:[domain-name]:service:[serviceType]:[version]
                 service id 			urn:upnp-org:serviceId:[serviceID]						urn:[domain-name]:serviceId:[serviceID]
                 */
-                if (!typeString) throw new Error('Argument \'typeString\' cannot be null.');
+                if (!typeString) throw new Error("Argument 'typeString' cannot be null.");
 
-                var parts = typeString.split(':');
-                if (parts.length !== 5 && parts.length !== 4) throw new Error('Invalid number of parts.  Must contain either 4 or 5, but had ' + parts.length);
+                var parts = typeString.split(":");
+                if (parts.length !== 5 && parts.length !== 4) throw new Error("Invalid number of parts.  Must contain either 4 or 5, but had " + parts.length);
 
                 var info = new UPnPExtensionInfo();
                 info.parts = parts;
