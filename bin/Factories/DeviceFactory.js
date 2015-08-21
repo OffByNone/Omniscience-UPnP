@@ -87,26 +87,48 @@ var DeviceFactory = (function () {
 				var iconsXml = _this2._xmlParser.getElements(deviceXml, "iconList icon");
 				if (!iconsXml.length) {
 					resolve();
-				}
-				iconsXml.forEach(function (iconXml) {
-					var icon = new Icon();
-					icon.mimeType = _this2._xmlParser.getText(iconXml, "mimetype");
-					icon.width = _this2._xmlParser.getText(iconXml, "width");
-					icon.height = _this2._xmlParser.getText(iconXml, "height");
-					icon.depth = _this2._xmlParser.getText(iconXml, "depth");
-					icon.url = _this2._urlProvider.toUrl(_this2._xmlParser.getText(iconXml, "url"), location, base);
-					if (icon.url && icon.url.href) {
-						_this2._getImage(icon.url.href, icon.mimeType).then(function (response) {
-							icon.base64Image = response;
-							device.icons.push(icon);
-							resolve();
+				} else {
+					(function () {
+						var icons = [];
+						iconsXml.forEach(function (iconXml) {
+							var icon = new Icon();
+							icon.mimeType = _this2._xmlParser.getText(iconXml, "mimetype");
+							icon.width = _this2._xmlParser.getText(iconXml, "width");
+							icon.height = _this2._xmlParser.getText(iconXml, "height");
+							icon.depth = _this2._xmlParser.getText(iconXml, "depth");
+							icon.url = _this2._urlProvider.toUrl(_this2._xmlParser.getText(iconXml, "url"), location, base);
+							console.log("width: " + Number.parseInt(icon.width, 10) + " height: " + Number.parseInt(icon.height, 10));
+							icon.area = (!isNaN(Number.parseInt(icon.width, 10)) ? Number.parseInt(icon.width, 10) : 1) * (!isNaN(Number.parseInt(icon.height, 10)) ? Number.parseInt(icon.height, 10) : 1);
+							icons.push(icon);
 						});
-					} else {
-						icon.base64Image = "";
-						device.icons.push(icon);
-						resolve();
-					}
-				});
+						//Find the biggest png or the biggest image if no png
+						var sortFunc = function sortFunc(a, b) {
+							if (a.area <= b.area) return 1;
+							return -1;
+						};
+						var pngIcons = icons.filter(function (icon) {
+							return icon.mimeType === "image/png";
+						}).sort(sortFunc);
+						if (pngIcons && pngIcons.length) {
+							device.icon = pngIcons[0];
+						} else {
+							icons.sort(sortFunc).filter(function (icon) {
+								return true;
+							});
+							device.icon = icons.sort(sortFunc)[0];
+						}
+
+						if (device.icon.url && device.icon.url.href) {
+							_this2._getImage(device.icon.url.href, device.icon.mimeType).then(function (response) {
+								device.icon.base64Image = response;
+								resolve();
+							});
+						} else {
+							device.icon.base64Image = "";
+							resolve();
+						}
+					})();
+				}
 			});
 		}
 
@@ -118,8 +140,7 @@ var DeviceFactory = (function () {
         binaryString[arrayLength] = String.fromCharCode(uInt8Array[arrayLength]);
       }
       let data = binaryString.join('');
-  
-      let base64 = window.btoa(data);
+  	    let base64 = window.btoa(data);
       return "data:image/jpeg;base64," + base64;
   }*/
 	}, {

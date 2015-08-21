@@ -118,7 +118,7 @@ var DeviceService = (function (_Eventable) {
 				this._notifications.notify({
 					title: 'Found ' + device.name,
 					text: "a " + device.model.name + " by " + device.manufacturer.name,
-					iconURL: device.icons.length > 0 && device.icons[0].base64Image ? device.icons[0].base64Image : Constants.defaultIcon
+					iconURL: device.icon && device.icon.base64Image ? device.icon.base64Image : Constants.defaultIcon
 				});
 			}
 			this._saveDeviceList();
