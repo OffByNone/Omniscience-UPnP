@@ -2,15 +2,15 @@
  * Un-configured DIAL devices show up as accesspoints
  */
 
-"use strict";
+'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 var Constants = require('../Constants');
 
@@ -19,8 +19,6 @@ var _require = require('omniscience-utilities');
 var Eventable = _require.Eventable;
 
 var AccessPointSearcher = (function (_Eventable) {
-    _inherits(AccessPointSearcher, _Eventable);
-
     function AccessPointSearcher(wifiMonitor) {
         _classCallCheck(this, AccessPointSearcher);
 
@@ -29,9 +27,7 @@ var AccessPointSearcher = (function (_Eventable) {
         this._accessPoints = [];
     }
 
-    /**
-     * Searches for access points
-     */
+    _inherits(AccessPointSearcher, _Eventable);
 
     _createClass(AccessPointSearcher, [{
         key: 'search',
@@ -87,14 +83,12 @@ var AccessPointSearcher = (function (_Eventable) {
             newAccessPoints.forEach(function (newAccessPoint) {
                 return _this._accessPoints.push(newAccessPoint);
             });
-            lostAccessPoints.forEach(function (lostAccessPoint) {
-                //todo: remove lost accesspoints from this._accessPoints
-            });
+            lostAccessPoints.forEach(function (lostAccessPoint) {});
 
             newAccessPoints.filter(function (newAccessPoint) {
                 return _this.isDialDevice(newAccessPoint);
             }).forEach(function (dialDevice) {
-                if (_this.isMatchStick(dialDevice)) console.log("Found new Matchstick ssid=" + dialDevice.ssid + " mac=" + dialDevice.mac + " signal=" + dialDevice.signal);else if (_this.isChromecast(dialDevice)) console.log("Found new Chromecast ssid=" + dialDevice.ssid + " mac=" + dialDevice.mac + " signal=" + dialDevice.signal);else if (_this.isFireTVStick(dialDevice)) console.log("Found new FireTVStick ssid=" + dialDevice.ssid + " mac=" + dialDevice.mac + " signal=" + dialDevice.signal);
+                if (_this.isMatchStick(dialDevice)) console.log('Found new Matchstick ssid=' + dialDevice.ssid + ' mac=' + dialDevice.mac + ' signal=' + dialDevice.signal);else if (_this.isChromecast(dialDevice)) console.log('Found new Chromecast ssid=' + dialDevice.ssid + ' mac=' + dialDevice.mac + ' signal=' + dialDevice.signal);else if (_this.isFireTVStick(dialDevice)) console.log('Found new FireTVStick ssid=' + dialDevice.ssid + ' mac=' + dialDevice.mac + ' signal=' + dialDevice.signal);
             });
         }
     }, {
@@ -108,4 +102,9 @@ var AccessPointSearcher = (function (_Eventable) {
     return AccessPointSearcher;
 })(Eventable);
 
+/**
+ * Searches for access points
+ */
 module.exports = AccessPointSearcher;
+
+//todo: remove lost accesspoints from this._accessPoints

@@ -11,12 +11,10 @@ var XmlParser = (function () {
 		this._domParser = domParser;
 	}
 
-	//todo: make this into a singleton
-
 	_createClass(XmlParser, [{
 		key: "parseFromString",
 		value: function parseFromString(stringOfXml) {
-			return typeof stringOfXml === "string" ? this._domParser.parseFromString(stringOfXml, 'text/xml') : null;
+			return typeof stringOfXml === "string" ? this._domParser.parseFromString(stringOfXml, "text/xml") : null;
 		}
 	}, {
 		key: "getElements",
@@ -49,4 +47,5 @@ var XmlParser = (function () {
 	return XmlParser;
 })();
 
+//todo: make this into a singleton
 module.exports = XmlParser;
