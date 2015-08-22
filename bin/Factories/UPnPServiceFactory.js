@@ -8,10 +8,11 @@ var UPnPVersion = require('../Entities/UPnPVersion');
 var UPnPService = require('../Entities/UPnPService');
 
 var UPnPServiceFactory = (function () {
-				function UPnPServiceFactory(fetch, xmlParser, urlProvider, upnpExtensionInfoFactory, serviceProperyFactory, serviceMethodFactory, serviceExecutor, executableServiceMethodFactory) {
+				function UPnPServiceFactory(fetch, md5, xmlParser, urlProvider, upnpExtensionInfoFactory, serviceProperyFactory, serviceMethodFactory, serviceExecutor, executableServiceMethodFactory) {
 								_classCallCheck(this, UPnPServiceFactory);
 
 								this._fetch = fetch;
+								this._md5 = md5;
 								this._xmlParser = xmlParser;
 								this._urlProvider = urlProvider;
 								this._upnpExtensionInfoFactory = upnpExtensionInfoFactory;
@@ -30,8 +31,8 @@ var UPnPServiceFactory = (function () {
 												upnpService.controlUrl = this._urlProvider.toUrl(this._xmlParser.getText(serviceXml, 'controlURL'), location, base);
 												upnpService.eventSubUrl = this._urlProvider.toUrl(this._xmlParser.getText(serviceXml, 'eventSubURL'), location, base);
 												upnpService.scpdUrl = this._urlProvider.toUrl(this._xmlParser.getText(serviceXml, 'SCPDURL'), location, base);
-												upnpService.uuid = this._xmlParser.getText(serviceXml, 'serviceId').split(':')[3];
 												upnpService.id = this._upnpExtensionInfoFactory.create(this._xmlParser.getText(serviceXml, 'serviceId'));
+												upnpService.hash = this._md5(upnpService.scpdUrl || location);
 												upnpService.type = this._upnpExtensionInfoFactory.create(this._xmlParser.getText(serviceXml, 'serviceType'));
 												upnpService.serverIP = serverIP;
 
@@ -56,7 +57,7 @@ var UPnPServiceFactory = (function () {
 																upnpService.methods.forEach(function (method) {
 																				return executableService[method.name] = _this._executableServiceMethodFactory.create(method, upnpService.type.raw);
 																});
-																_this._serviceExecutor.executableServices[upnpService.uuid] = executableService;
+																_this._serviceExecutor.executableServices[upnpService.hash] = executableService;
 
 																return upnpService;
 												});

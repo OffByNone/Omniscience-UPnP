@@ -1,12 +1,12 @@
 "use strict";
 var ServiceExecutor = {
         executableServices: {},
-        callService: function callService(serviceControlUrl, serviceUUID, serviceMethod, data) {
+        callService: function callService(serviceControlUrl, serviceHash, serviceMethod, data) {
                 if (!serviceControlUrl) throw new Error("Argument 'serviceControlUrl' cannot be null.");
-                if (!serviceUUID) throw new Error("Argument 'serviceUUID' cannot be null.");
+                if (!serviceHash) throw new Error("Argument 'serviceHash' cannot be null.");
                 if (!serviceMethod) throw new Error("Argument 'serviceMethod' cannot be null.");
 
-                var serviceClass = ServiceExecutor.executableServices[serviceUUID];
+                var serviceClass = ServiceExecutor.executableServices[serviceHash];
                 if (!serviceClass) throw new Error("Executable Service has not yet been created.");
 
                 var serviceFunc = serviceClass[serviceMethod];
