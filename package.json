@@ -1,6 +1,6 @@
 {
 	"name": "omniscience-upnp",
-	"version": "0.6.0",
+	"version": "0.9.0",
 	"description": "Omniscience Module for finding and creating UPnP devices.",
 	"main": "./bin/index.js",
 	"author": "OffByNone",
@@ -34,7 +34,7 @@
 		"omniscience-utilities": "offbynone/omniscience-utilities"
 	},
 	"scripts": {
-		"lint": "eslint",
+		"lint": "eslint ./lib",
 		"build": "babel ./lib --out-dir ./bin",
 		"post": "jpm post --post-url=http://127.0.0.1:7999",
 		"buildpost": "npm run build && npm run post",
