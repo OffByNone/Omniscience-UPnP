@@ -15,14 +15,14 @@ describe("ServicePropertyFactory", function () {
 			//arrange
 			var xml = "valid xml goes here";
 			var name = "that's not my name";
-			var dataType = "int64";
+			var soapType = "int64";
 			var defaultValue = "default";
 			var allowedValues = [{ innerHTML: "use this one" }];
 
 			_mockXmlParser.getText = jasmine.createSpy("getText").and.callFake(function (xml, elName) {
 				expect(xml).toBe(xml);
 				if (elName === "name") return name;
-				if (elName === "dataType") return dataType;
+				if (elName === "dataType") return soapType;
 				if (elName === "defaultValue") return defaultValue;
 				else fail("unexpected element name was passed to get text");
 			});
@@ -36,7 +36,7 @@ describe("ServicePropertyFactory", function () {
 
 			//assert
 			expect(actual.name).toBe(name);
-			expect(actual.datatype).toBe(dataType);
+			expect(actual.soapType).toBe(soapType);
 			expect(actual.defaultValue).toBe(defaultValue);
 			expect(actual.evented).toBeTruthy();
 			expect(Array.isArray(actual.allowedValues)).toBeTruthy();
@@ -51,7 +51,7 @@ describe("ServicePropertyFactory", function () {
 			//arrange
 			var xml = "valid xml goes here";
 			var name = "that's not my name";
-			var dataType = "int64";
+			var soapType = "int64";
 			var defaultValue = "default";
 			var allowedValues = [{ innerHTML: "use this one" }];
 			var minimum = "not less than this";
@@ -61,7 +61,7 @@ describe("ServicePropertyFactory", function () {
 			_mockXmlParser.getText = jasmine.createSpy("getText").and.callFake(function (xml, elName) {
 				expect(xml).toBe(xml);
 				if (elName === "name") return name;
-				if (elName === "dataType") return dataType;
+				if (elName === "dataType") return soapType;
 				if (elName === "defaultValue") return defaultValue;
 				if (elName === "allowedValueRange minimum") return minimum;
 				if (elName === "allowedValueRange maximum") return maximum;
@@ -84,14 +84,14 @@ describe("ServicePropertyFactory", function () {
 			//arrange
 			var xml = "valid xml goes here";
 			var name = "that's not my name";
-			var dataType = "int64";
+			var soapType = "int64";
 			var defaultValue = "default";
 			var allowedValues = [{ innerHTML: "use this one" }];
 
 			_mockXmlParser.getText = jasmine.createSpy("getText").and.callFake(function (xml, elName) {
 				expect(xml).toBe(xml);
 				if (elName === "name") return name;
-				if (elName === "dataType") return dataType;
+				if (elName === "dataType") return soapType;
 				if (elName === "defaultValue") return defaultValue;
 				else fail("unexpected element name was passed to get text");
 			});
